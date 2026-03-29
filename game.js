@@ -10,6 +10,15 @@ const STAGE = {
   baseMeterGain: 0.008
 };
 
+const BATTLE_TUNING = {
+  fighterScale: 0.86,
+  groundSpeedScale: 0.52,
+  airControlScale: 0.5,
+  actionTravelScale: 0.58
+};
+
+const PROJECTILE_HITSTUN_MS = 500;
+
 const roster = [
   {
     id: "ryu",
@@ -1835,8 +1844,11 @@ function registerHit(attacker, defender, move, sourceType = "melee") {
   const takenScale = defender.character.stats.damageTaken || 1;
   const damage = Math.max(1, Math.round(move.damage * damageRatio * attackScale * defenseScale * takenScale));
   const weight = defender.character.stats.weight || 1;
+  const baseHitstun = armorActive ? move.stun * 0.18 : guarding ? move.stun * 0.45 : move.stun;
+  const projectileHitstun =
+    !guarding && !armorActive && sourceType === "projectile" && move.kind === "projectile" ? PROJECTILE_HITSTUN_MS : 0;
   defender.hp = clamp(defender.hp - damage, 0, defender.character.stats.health);
-  defender.hitstun = armorActive ? move.stun * 0.18 : guarding ? move.stun * 0.45 : move.stun;
+  defender.hitstun = Math.max(baseHitstun, projectileHitstun);
   defender.flashTimer = 140;
   defender.vx = (attacker.facing * (guarding ? move.push * 0.45 : armorActive ? move.push * 0.25 : move.push)) / weight;
   defender.vy = (guarding ? 1.8 : sourceType === "projectile" ? 2.2 : move.kind === "burst" || move.kind === "dash" ? 6.2 : 3.6) / weight;
@@ -1972,11 +1984,11 @@ function updateAction(fighter, opponent, dt, dtMs) {
   action.elapsed += dtMs;
 
   if (action.key === "heavy" && action.elapsed < move.startup + move.active) {
-    fighter.vx = fighter.facing * move.dash;
+    fighter.vx = fighter.facing * move.dash * BATTLE_TUNING.actionTravelScale;
   }
 
   if (move.kind === "dash" && action.elapsed >= move.startup * 0.55 && action.elapsed < move.startup + move.active) {
-    fighter.vx = fighter.facing * move.burstSpeed;
+    fighter.vx = fighter.facing * move.burstSpeed * BATTLE_TUNING.actionTravelScale;
     if (!action.launched && fighter.y === 0) {
       fighter.vy = move.burstLift;
       action.launched = true;
@@ -1984,7 +1996,7 @@ function updateAction(fighter, opponent, dt, dtMs) {
   }
 
   if (move.kind === "burst" && action.elapsed >= move.startup * 0.45 && action.elapsed < move.startup + move.active) {
-    fighter.vx = fighter.facing * move.burstSpeed;
+    fighter.vx = fighter.facing * move.burstSpeed * BATTLE_TUNING.actionTravelScale;
     if (!action.launched) {
       fighter.vy = move.burstLift;
       action.launched = true;
@@ -2054,14 +2066,14 @@ function updateFighterState(fighter, opponent, dt, dtMs) {
         fighter.guardTimer = 120;
         fighter.vx *= 0.78;
       } else if (direction !== 0) {
-        fighter.vx += (direction * fighter.character.stats.speed - fighter.vx) * 0.34;
+        fighter.vx += (direction * fighter.character.stats.speed * BATTLE_TUNING.groundSpeedScale - fighter.vx) * 0.34;
         fighter.state = "walk";
       } else {
         fighter.vx *= 0.74;
         fighter.state = "idle";
       }
     } else {
-      fighter.vx += direction * (fighter.character.stats.airControl || 0.22);
+      fighter.vx += direction * (fighter.character.stats.airControl || 0.22) * BATTLE_TUNING.airControlScale;
       fighter.state = "jump";
     }
 
@@ -2714,12 +2726,13 @@ function renderFighters(time) {
     const profile = fighter.profile;
     const baseX = fighter.x;
     const baseY = STAGE.floorY - fighter.y;
+    const fighterScale = BATTLE_TUNING.fighterScale;
     fighter.dom.root.setAttribute("transform", `translate(${baseX} ${baseY})`);
-    fighter.dom.figure.setAttribute("transform", `scale(${fighter.facing} 1)`);
+    fighter.dom.figure.setAttribute("transform", `scale(${fighter.facing * fighterScale} ${fighterScale})`);
     fighter.dom.root.classList.toggle("is-hit", fighter.flashTimer > 0);
     fighter.dom.root.classList.toggle("is-guard", fighter.guardTimer > 0);
     fighter.dom.root.classList.toggle("is-ko", fighter.ko);
-    fighter.dom.nameplate.setAttribute("transform", `translate(0 ${pose.nameY})`);
+    fighter.dom.nameplate.setAttribute("transform", `translate(0 ${pose.nameY * fighterScale + 10})`);
 
     fighter.dom.aura.setAttribute("fill", fighter.character.palette.aura);
     fighter.dom.aura.setAttribute("opacity", String(pose.aura));
@@ -2732,7 +2745,8 @@ function renderFighters(time) {
     fighter.dom.frontArm.setAttribute("transform", `translate(${profile.shoulder} -114) rotate(${pose.frontArm}) scale(1 ${profile.armScale})`);
     fighter.dom.torso.setAttribute("transform", `translate(0 ${pose.torsoY}) rotate(${pose.torsoTilt}) scale(${profile.torsoScaleX} ${profile.torsoScaleY})`);
     fighter.dom.head.setAttribute("transform", `translate(0 ${pose.torsoY * 0.45 + profile.headOffset}) rotate(${pose.headTilt}) scale(${profile.headScale})`);
-    fighter.dom.shadow.setAttribute("rx", String(48 * pose.shadow));
+    fighter.dom.shadow.setAttribute("rx", String(48 * pose.shadow * fighterScale));
+    fighter.dom.shadow.setAttribute("ry", String(14 * fighterScale));
   });
 }
 
@@ -2766,14 +2780,59 @@ function endMatch(winner, message) {
     const winnerLabel = `${winnerTag} ${winner.character.name}`;
     const winnerMessage = `${winnerLabel} 获胜`;
     elements.overlayTitle.textContent = winnerMessage;
-    elements.overlaySubtitle.textContent = `${winnerLabel} 取得本回合胜利。`;
+    elements.overlaySubtitle.textContent = `${winnerLabel} 取得本回合胜利。按空格再来一局。`;
     setAnnouncer(winnerMessage, 2500);
     return;
   }
 
   elements.overlayTitle.textContent = message;
-  elements.overlaySubtitle.textContent = "双方体力相同，战成平局。";
+  elements.overlaySubtitle.textContent = "双方体力相同，战成平局。按空格再来一局。";
   setAnnouncer(message, 2500);
+}
+
+function pauseMatch() {
+  if (state.phase !== "fight") {
+    return;
+  }
+
+  resetInputState();
+  state.phase = "paused";
+  state.announcerUntil = Number.POSITIVE_INFINITY;
+  elements.announcerText.textContent = "已暂停 · 按空格继续";
+}
+
+function resumeMatch() {
+  if (state.phase !== "paused") {
+    return;
+  }
+
+  resetInputState();
+  state.phase = "fight";
+  state.lastFrame = 0;
+  setAnnouncer("格斗继续", 900);
+}
+
+function handleSpaceAction() {
+  if (!wasPressed("Space")) {
+    return false;
+  }
+
+  if (state.phase === "fight") {
+    pauseMatch();
+    return true;
+  }
+
+  if (state.phase === "paused") {
+    resumeMatch();
+    return true;
+  }
+
+  if (state.phase === "over") {
+    startMatch();
+    return true;
+  }
+
+  return false;
 }
 
 function consumePressedKeys() {
@@ -2781,6 +2840,13 @@ function consumePressedKeys() {
 }
 
 function gameLoop(timestamp) {
+  if (handleSpaceAction()) {
+    state.lastFrame = timestamp;
+    consumePressedKeys();
+    state.loopId = requestAnimationFrame(gameLoop);
+    return;
+  }
+
   if (!state.lastFrame) {
     state.lastFrame = timestamp;
   }
@@ -2802,6 +2868,11 @@ function gameLoop(timestamp) {
       renderEffects();
       updateHud();
     }
+  } else if (state.phase === "paused") {
+    renderFighters(timestamp);
+    renderProjectiles();
+    renderEffects();
+    updateHud();
   } else if (state.phase === "over") {
     updateEffects(dtMs);
     renderEffects();
