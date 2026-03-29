@@ -157,7 +157,7 @@ const roster = [
       skill1: {
         label: "气功拳",
         kind: "projectile",
-        damage: 9,
+        damage: 12,
         meterCost: 16,
         cooldown: 840,
         castTime: 136,
@@ -342,7 +342,7 @@ const roster = [
       skill1: {
         label: "樱花波动拳",
         kind: "projectile",
-        damage: 9,
+        damage: 11,
         meterCost: 14,
         cooldown: 760,
         castTime: 150,
