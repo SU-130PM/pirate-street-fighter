@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>街头斗魂 SVG Arena</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">Pure SVG Fighter Demo</p>
+      <h1>
+        街头霸王 [山寨版]
+      </h1>
+      <p class="hero-copy">
+        选择两名角色，在同一键盘上用 <strong>WSAD</strong> 与 <strong>方向键</strong> 展开对战。
+        所有人物、技能特效与动画均由纯 SVG 生成。
+      </p>
+    </header>
+
+    <main>
+      <section class="selection-screen" id="selectionScreen">
+        <div class="section-head">
+          <div>
+            <p class="label">角色选择</p>
+            <h2>挑选你的斗士</h2>
+          </div>
+          <div class="selection-tip">点击卡片上的按钮，将角色分配给 1P 或 2P</div>
+        </div>
+
+        <div class="selection-layout">
+          <div class="player-panels">
+            <article class="player-panel player-one" id="playerOnePanel">
+              <div class="panel-top">
+                <span class="player-badge">1P</span>
+                <span class="player-keys">WSAD / F G H T</span>
+              </div>
+              <div class="player-preview" id="playerOnePreview"></div>
+              <div class="player-details">
+                <h3 id="playerOneName">未选择</h3>
+                <p id="playerOneTitle">请选择角色</p>
+                <ul class="move-list" id="playerOneMoves"></ul>
+              </div>
+            </article>
+
+            <article class="player-panel player-two" id="playerTwoPanel">
+              <div class="panel-top">
+                <span class="player-badge">2P</span>
+                <span class="player-keys">↑↓←→ / K L ; P</span>
+              </div>
+              <div class="player-preview" id="playerTwoPreview"></div>
+              <div class="player-details">
+                <h3 id="playerTwoName">未选择</h3>
+                <p id="playerTwoTitle">请选择角色</p>
+                <ul class="move-list" id="playerTwoMoves"></ul>
+              </div>
+            </article>
+          </div>
+
+          <div class="character-grid" id="characterGrid"></div>
+        </div>
+
+        <div class="selection-actions">
+          <button class="primary-button" id="startBattleButton" disabled>开始对战</button>
+        </div>
+      </section>
+
+      <section class="battle-screen hidden" id="battleScreen">
+        <div class="hud">
+          <div class="fighter-hud" id="hudP1">
+            <div class="hud-name-row">
+              <span class="hud-slot">1P</span>
+              <span class="hud-name" id="hudP1Name">-</span>
+            </div>
+            <div class="bar health-bar">
+              <span id="hudP1HealthFill"></span>
+            </div>
+            <div class="bar meter-bar">
+              <span id="hudP1MeterFill"></span>
+            </div>
+          </div>
+
+          <div class="center-hud">
+            <div class="timer" id="timerDisplay">∞</div>
+            <div class="announcer" id="announcerText">准备开战</div>
+          </div>
+
+          <div class="fighter-hud align-right" id="hudP2">
+            <div class="hud-name-row">
+              <span class="hud-name" id="hudP2Name">-</span>
+              <span class="hud-slot">2P</span>
+            </div>
+            <div class="bar health-bar">
+              <span id="hudP2HealthFill"></span>
+            </div>
+            <div class="bar meter-bar">
+              <span id="hudP2MeterFill"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="arena-shell">
+          <svg id="arenaSvg" viewBox="0 56 1200 520" aria-label="街霸风格格斗舞台" role="img">
+            <defs>
+              <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1c214d"></stop>
+                <stop offset="60%" stop-color="#2f5d8f"></stop>
+                <stop offset="100%" stop-color="#f98a5f"></stop>
+              </linearGradient>
+              <linearGradient id="floorGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1f2740"></stop>
+                <stop offset="100%" stop-color="#0e1120"></stop>
+              </linearGradient>
+              <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffe98c"></stop>
+                <stop offset="100%" stop-color="#ff7e4b"></stop>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4.5" result="blur"></feGaussianBlur>
+                <feMerge>
+                  <feMergeNode in="blur"></feMergeNode>
+                  <feMergeNode in="SourceGraphic"></feMergeNode>
+                </feMerge>
+              </filter>
+              <pattern id="scanlines" patternUnits="userSpaceOnUse" width="8" height="8">
+                <rect width="8" height="4" fill="rgba(255,255,255,0.03)"></rect>
+              </pattern>
+            </defs>
+
+            <g class="stage-background">
+              <rect width="1200" height="640" fill="url(#skyGradient)"></rect>
+              <circle cx="980" cy="116" r="84" fill="url(#sunGradient)" opacity="0.92" filter="url(#glow)"></circle>
+              <g class="city city-back">
+                <rect x="42" y="240" width="54" height="170"></rect>
+                <rect x="110" y="186" width="82" height="224"></rect>
+                <rect x="206" y="232" width="68" height="178"></rect>
+                <rect x="292" y="166" width="92" height="244"></rect>
+                <rect x="412" y="220" width="58" height="190"></rect>
+                <rect x="494" y="180" width="88" height="230"></rect>
+                <rect x="604" y="244" width="62" height="166"></rect>
+                <rect x="686" y="138" width="110" height="272"></rect>
+                <rect x="816" y="214" width="74" height="196"></rect>
+                <rect x="912" y="160" width="92" height="250"></rect>
+                <rect x="1024" y="206" width="74" height="204"></rect>
+              </g>
+              <g class="city city-front">
+                <rect x="24" y="300" width="120" height="130"></rect>
+                <rect x="164" y="272" width="142" height="158"></rect>
+                <rect x="328" y="252" width="88" height="178"></rect>
+                <rect x="430" y="290" width="152" height="140"></rect>
+                <rect x="604" y="246" width="120" height="184"></rect>
+                <rect x="746" y="280" width="96" height="150"></rect>
+                <rect x="870" y="248" width="132" height="182"></rect>
+                <rect x="1030" y="286" width="110" height="144"></rect>
+              </g>
+              <g class="neons">
+                <rect x="110" y="326" width="104" height="28" rx="14"></rect>
+                <rect x="470" y="312" width="130" height="30" rx="15"></rect>
+                <rect x="880" y="338" width="122" height="28" rx="14"></rect>
+              </g>
+              <g class="crowd">
+                <path d="M0 458 C70 426 120 492 190 458 C240 432 290 492 350 456 C396 430 458 498 520 456 C580 414 644 492 708 452 C766 418 834 498 900 454 C962 412 1026 492 1088 454 C1134 428 1168 446 1200 452 L1200 508 L0 508 Z"></path>
+              </g>
+              <g class="arena-floor">
+                <rect x="0" y="430" width="1200" height="210" fill="url(#floorGradient)"></rect>
+                <rect x="0" y="430" width="1200" height="210" fill="url(#scanlines)"></rect>
+                <path d="M0 446 H1200"></path>
+                <path d="M0 506 H1200"></path>
+                <path d="M0 564 H1200"></path>
+              </g>
+            </g>
+
+            <g id="fxLayer"></g>
+            <g id="projectileLayer"></g>
+            <g id="fighterLayer"></g>
+          </svg>
+
+          <div class="battle-overlay hidden" id="battleOverlay">
+            <div class="overlay-card">
+              <p class="label">对战结束</p>
+              <h2 id="overlayTitle">胜负已分</h2>
+              <p id="overlaySubtitle">再来一局？</p>
+              <div class="overlay-actions">
+                <button class="primary-button" id="rematchButton">再来一局</button>
+                <button class="secondary-button" id="backToSelectButton">返回选人</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-board">
+          <div class="controls-card">
+            <h3>1P 控制</h3>
+            <p><strong>移动：</strong>W / A / S / D</p>
+            <p><strong>招式：</strong>F 轻击 / G 重击 / H 技能一 / T 技能二</p>
+          </div>
+          <div class="controls-card">
+            <h3>2P 控制</h3>
+            <p><strong>移动：</strong>↑ / ← / ↓ / →</p>
+            <p><strong>招式：</strong>K 轻击 / L 重击 / ; 技能一 / P 技能二</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./game.js"></script>
+</body>
+</html>
