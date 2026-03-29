@@ -502,8 +502,8 @@ const roster = [
     name: "萨格特",
     title: "重炮牵制与高压升龙的泰拳帝王",
     intro: "虎炮封路、虎膝切入，再以猛虎升龙破惩罚一切冒进。",
-    trait: "重炮型：体型最重、火力最足，虎炮压制极强，但机动偏慢。",
-    stats: { health: 114, speed: 4.0, jump: 8.0, power: 9.7, defense: 8.9, meterGain: 0.88, airControl: 0.17, weight: 1.18, damageTaken: 0.95 },
+    trait: "重炮型：体型最重、牵制火力很强，但机动偏慢，近身容错已明显下调。",
+    stats: { health: 106, speed: 3.85, jump: 7.7, power: 9.1, defense: 8.3, meterGain: 0.82, airControl: 0.16, weight: 1.18, damageTaken: 0.99 },
     palette: {
       primary: "#c7ac68",
       secondary: "#f7e1a8",
@@ -518,41 +518,41 @@ const roster = [
       belt: "#7d2c16"
     },
     moves: {
-      light: { label: "泰拳刺拳", damage: 7, reach: 92, height: 104, startup: 60, active: 92, recovery: 180, push: 5.4, stun: 220 },
-      heavy: { label: "虎膝", damage: 11, reach: 118, height: 110, startup: 94, active: 116, recovery: 320, dash: 8.0, push: 11, stun: 350 },
+      light: { label: "泰拳刺拳", damage: 6, reach: 88, height: 104, startup: 62, active: 88, recovery: 184, push: 4.8, stun: 190 },
+      heavy: { label: "虎膝", damage: 9, reach: 112, height: 108, startup: 104, active: 108, recovery: 350, dash: 7.4, push: 9.4, stun: 300 },
       skill1: {
         label: "虎炮",
         kind: "projectile",
-        damage: 12,
-        meterCost: 20,
-        cooldown: 950,
-        castTime: 150,
-        recovery: 420,
-        projectileSpeed: 10.8,
-        projectileRadius: 24,
+        damage: 10,
+        meterCost: 22,
+        cooldown: 1080,
+        castTime: 162,
+        recovery: 460,
+        projectileSpeed: 9.6,
+        projectileRadius: 22,
         projectileHeight: 124,
         projectileShape: "tiger",
         projectileWaveAmp: 0.2,
         projectileWaveSpeed: 0.08,
         projectileLife: 2000,
-        push: 9,
-        stun: 340
+        push: 7.8,
+        stun: 290
       },
       skill2: {
         label: "猛虎升龙破",
         kind: "burst",
-        damage: 16,
-        meterCost: 30,
-        cooldown: 1600,
-        startup: 84,
+        damage: 14,
+        meterCost: 32,
+        cooldown: 1820,
+        startup: 92,
         active: 128,
-        recovery: 460,
-        burstSpeed: 4.8,
-        burstLift: 10.6,
-        reach: 96,
-        height: 164,
-        push: 12.4,
-        stun: 450
+        recovery: 520,
+        burstSpeed: 4.4,
+        burstLift: 9.8,
+        reach: 90,
+        height: 154,
+        push: 10.8,
+        stun: 360
       }
     }
   },
@@ -614,6 +614,129 @@ const roster = [
         hitInterval: 72,
         push: 11.8,
         stun: 400
+      }
+    }
+  },
+  {
+    id: "rose",
+    name: "罗丝",
+    title: "灵魂术与围巾步法并重的神秘占卜师",
+    intro: "以灵魂火花稳控中距离，再用灵魂螺旋切入，靠围巾节奏反压对手。",
+    trait: "术式型：牵制稳定、节奏均衡，攻防转换很顺，但爆发不算顶尖。",
+    stats: { health: 98, speed: 4.55, jump: 8.9, power: 8.3, defense: 8.6, meterGain: 1.04, airControl: 0.27, weight: 0.95, damageTaken: 1 },
+    palette: {
+      primary: "#7b53bf",
+      secondary: "#f1c85a",
+      trim: "#2c4f7d",
+      aura: "#7ec9ff",
+      skin: "#efc9ab",
+      dark: "#44285c"
+    },
+    costume: {
+      hair: "M -18 -154 Q -8 -172 10 -166 L 20 -148 Q 4 -144 -14 -138 Z",
+      emblem: "M -16 -102 Q 0 -118 16 -102 Q 0 -82 -16 -102 Z",
+      belt: "#f1c85a"
+    },
+    moves: {
+      light: { label: "围巾刺掌", damage: 5, reach: 94, height: 102, startup: 54, active: 92, recovery: 176, push: 4.6, stun: 190 },
+      heavy: { label: "滑步鞭踢", damage: 9, reach: 116, height: 110, startup: 98, active: 112, recovery: 292, dash: 6.5, push: 9, stun: 300 },
+      skill1: {
+        label: "灵魂火花",
+        kind: "projectile",
+        damage: 10,
+        meterCost: 18,
+        cooldown: 880,
+        castTime: 148,
+        recovery: 360,
+        projectileSpeed: 8.2,
+        projectileRadius: 22,
+        projectileHeight: 120,
+        projectileShape: "soul",
+        projectileWaveAmp: 0.7,
+        projectileWaveSpeed: 0.12,
+        projectileLife: 2150,
+        push: 7.3,
+        stun: 300
+      },
+      skill2: {
+        label: "灵魂螺旋",
+        kind: "dash",
+        damage: 5,
+        meterCost: 26,
+        cooldown: 1460,
+        startup: 76,
+        active: 164,
+        recovery: 420,
+        burstSpeed: 8.1,
+        burstLift: 2.2,
+        reach: 122,
+        height: 122,
+        hits: 2,
+        hitInterval: 74,
+        push: 10.3,
+        stun: 340
+      }
+    }
+  },
+  {
+    id: "juri",
+    name: "朱莉·韩",
+    title: "邪锋踢技与风破压迫并存的危险斗士",
+    intro: "靠风破刃打乱节奏，再用穿风车高速切入，空中与近身压迫都很强。",
+    trait: "邪锋型：移动和起跳都极快，压制凶狠，但防御与容错偏低。",
+    stats: { health: 92, speed: 5.6, jump: 10.3, power: 8.5, defense: 7.6, meterGain: 1.12, airControl: 0.4, weight: 0.86, damageTaken: 1.07 },
+    palette: {
+      primary: "#2d2337",
+      secondary: "#d24b90",
+      trim: "#6f3cd1",
+      aura: "#c96bff",
+      skin: "#efc3a2",
+      dark: "#16121f"
+    },
+    costume: {
+      hair: "M -22 -154 Q -12 -184 -2 -156 L 6 -176 L 14 -156 Q 24 -184 28 -154 L 20 -136 Q 4 -144 -20 -136 Z",
+      emblem: "M -14 -102 L 0 -118 L 14 -102 L 0 -86 Z",
+      belt: "#d24b90"
+    },
+    moves: {
+      light: { label: "邪眼连踢", damage: 4, reach: 84, height: 100, startup: 42, active: 100, recovery: 160, hits: 2, hitInterval: 42, push: 3.5, stun: 128 },
+      heavy: { label: "回身斧踢", damage: 9, reach: 108, height: 122, startup: 88, active: 116, recovery: 268, dash: 6.9, push: 9.1, stun: 300 },
+      skill1: {
+        label: "风破刃",
+        kind: "projectile",
+        damage: 9,
+        meterCost: 18,
+        cooldown: 800,
+        castTime: 132,
+        recovery: 330,
+        projectileSpeed: 9.4,
+        projectileRadius: 20,
+        projectileHeight: 110,
+        projectileShape: "fang",
+        projectileWaveAmp: 1.2,
+        projectileWaveSpeed: 0.16,
+        projectileLife: 1900,
+        guardDamageRatio: 0.48,
+        push: 6.8,
+        stun: 270
+      },
+      skill2: {
+        label: "穿风车",
+        kind: "dash",
+        damage: 6,
+        meterCost: 28,
+        cooldown: 1360,
+        startup: 66,
+        active: 178,
+        recovery: 392,
+        burstSpeed: 9.5,
+        burstLift: 3.2,
+        reach: 128,
+        height: 126,
+        hits: 3,
+        hitInterval: 56,
+        push: 11.4,
+        stun: 360
       }
     }
   }
@@ -879,6 +1002,58 @@ const styleProfiles = {
     bounceScale: 1.45,
     shadowScale: 0.92,
     trailWidth: 9
+  },
+  rose: {
+    shoulder: 26,
+    hips: 18,
+    armScale: 1,
+    legScale: 1.02,
+    torsoScaleX: 0.95,
+    torsoScaleY: 1,
+    headScale: 0.98,
+    headOffset: 1,
+    nameY: -194,
+    previewScaleX: 0.97,
+    previewScaleY: 1,
+    previewYOffset: 1,
+    auraBase: 0.14,
+    swayScale: 0.95,
+    walkScale: 0.98,
+    frontArmBias: -12,
+    backArmBias: 12,
+    frontLegBias: 6,
+    backLegBias: -4,
+    torsoTiltBias: -2,
+    headTiltBias: -1,
+    bounceScale: 0.78,
+    shadowScale: 0.97,
+    trailWidth: 10
+  },
+  juri: {
+    shoulder: 23,
+    hips: 18,
+    armScale: 0.94,
+    legScale: 1.09,
+    torsoScaleX: 0.9,
+    torsoScaleY: 0.95,
+    headScale: 0.95,
+    headOffset: 2,
+    nameY: -192,
+    previewScaleX: 0.92,
+    previewScaleY: 0.95,
+    previewYOffset: 4,
+    auraBase: 0.14,
+    swayScale: 1.3,
+    walkScale: 1.28,
+    frontArmBias: -22,
+    backArmBias: 8,
+    frontLegBias: 16,
+    backLegBias: -10,
+    torsoTiltBias: -9,
+    headTiltBias: -3,
+    bounceScale: 1.5,
+    shadowScale: 0.91,
+    trailWidth: 9
   }
 };
 
@@ -1068,6 +1243,18 @@ function getPreviewAccessoryMarkup(character) {
         <path d="M -18 -136 Q -44 -86 -54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
         <path d="M 18 -136 Q 44 -86 54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
       `;
+    case "rose":
+      return `
+        <ellipse cx="0" cy="-146" rx="30" ry="12" fill="${palette.secondary}" opacity="0.88"></ellipse>
+        <path d="M -34 -122 Q -82 -80 -74 -18 Q -24 -12 8 -44" fill="none" stroke="${palette.secondary}" stroke-width="10" stroke-linecap="round" opacity="0.84"></path>
+        <path d="M 26 -110 Q 70 -64 62 -8" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round" opacity="0.6"></path>
+      `;
+    case "juri":
+      return `
+        <path d="M -24 -162 Q -8 -186 0 -154 Q -18 -146 -24 -162 Z" fill="${palette.secondary}" opacity="0.92"></path>
+        <path d="M 24 -162 Q 8 -186 0 -154 Q 18 -146 24 -162 Z" fill="${palette.secondary}" opacity="0.92"></path>
+        <path d="M -16 -98 L 0 -84 L 16 -98" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round"></path>
+      `;
     default:
       return "";
   }
@@ -1233,6 +1420,51 @@ function decorateFighterParts(fighter, parts) {
         fill: "none",
         stroke: palette.dark,
         "stroke-width": 7,
+        "stroke-linecap": "round"
+      });
+      break;
+    case "rose":
+      add(parts.head, "ellipse", {
+        cx: 0,
+        cy: -146,
+        rx: 30,
+        ry: 12,
+        fill: palette.secondary,
+        opacity: 0.88
+      });
+      add(parts.body, "path", {
+        d: "M -30 -122 Q -84 -84 -72 -18 Q -24 -8 6 -42",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 10,
+        "stroke-linecap": "round",
+        opacity: 0.8
+      });
+      add(parts.body, "path", {
+        d: "M 24 -110 Q 68 -66 60 -8",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 8,
+        "stroke-linecap": "round",
+        opacity: 0.56
+      });
+      break;
+    case "juri":
+      add(parts.head, "path", {
+        d: "M -24 -162 Q -8 -186 0 -154 Q -18 -146 -24 -162 Z",
+        fill: palette.secondary,
+        opacity: 0.92
+      });
+      add(parts.head, "path", {
+        d: "M 24 -162 Q 8 -186 0 -154 Q 18 -146 24 -162 Z",
+        fill: palette.secondary,
+        opacity: 0.92
+      });
+      add(parts.torso, "path", {
+        d: "M -16 -98 L 0 -84 L 16 -98",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 6,
         "stroke-linecap": "round"
       });
       break;
@@ -2087,6 +2319,54 @@ function renderProjectiles() {
           opacity: 0.95
         })
       );
+    } else if (projectile.shape === "soul") {
+      group.append(
+        createSvgElement("ellipse", {
+          class: "projectile-core",
+          rx: projectile.radius + 12,
+          ry: projectile.radius * 0.9,
+          fill: projectile.color,
+          opacity: 0.18
+        }),
+        createSvgElement("circle", {
+          class: "projectile-core",
+          r: projectile.radius * 0.88,
+          fill: projectile.color,
+          opacity: 0.84
+        }),
+        createSvgElement("path", {
+          d: `M ${-projectile.radius * 1.2} 0 Q 0 ${-projectile.radius * 1.24} ${projectile.radius * 1.18} 0 Q 0 ${projectile.radius * 0.52} ${-projectile.radius * 1.2} 0`,
+          fill: "none",
+          stroke: "#fff6db",
+          "stroke-width": 3,
+          "stroke-linecap": "round",
+          opacity: 0.84
+        }),
+        createSvgElement("circle", {
+          r: projectile.radius * 0.28,
+          fill: "#fffaf0",
+          opacity: 0.9
+        })
+      );
+    } else if (projectile.shape === "fang") {
+      group.append(
+        createSvgElement("path", {
+          class: "projectile-core",
+          d: `M ${-projectile.radius * 1.42} 0 Q ${-projectile.radius * 0.1} ${-projectile.radius * 1.08} ${projectile.radius * 1.18} ${-projectile.radius * 0.28} Q ${projectile.radius * 0.36} 0 ${projectile.radius * 1.18} ${projectile.radius * 0.28} Q ${-projectile.radius * 0.1} ${projectile.radius * 1.08} ${-projectile.radius * 1.42} 0 Z`,
+          fill: projectile.color,
+          opacity: 0.82
+        }),
+        createSvgElement("path", {
+          d: `M ${-projectile.radius * 0.94} 0 Q ${projectile.radius * 0.04} ${-projectile.radius * 0.74} ${projectile.radius * 0.88} ${-projectile.radius * 0.2} Q ${projectile.radius * 0.28} 0 ${projectile.radius * 0.88} ${projectile.radius * 0.2} Q ${projectile.radius * 0.04} ${projectile.radius * 0.74} ${-projectile.radius * 0.94} 0 Z`,
+          fill: "#ffd2f6",
+          opacity: 0.82
+        }),
+        createSvgElement("circle", {
+          r: projectile.radius * 0.22,
+          fill: "#fff3ff",
+          opacity: 0.92
+        })
+      );
     } else {
       group.append(
         createSvgElement("circle", {
@@ -2374,6 +2654,55 @@ function getPose(fighter, time) {
     pose.backLeg = 62;
     pose.torsoTilt = -22;
     pose.aura = 0.36;
+  }
+
+  if (fighter.character.id === "rose" && fighter.action?.move.kind === "projectile") {
+    pose.frontArm = -108;
+    pose.backArm = 36;
+    pose.frontLeg = 4;
+    pose.backLeg = -2;
+    pose.torsoTilt = -14;
+    pose.headTilt = -4;
+    pose.aura = 0.34;
+  }
+
+  if (fighter.character.id === "rose" && fighter.action?.move.kind === "dash") {
+    pose.frontArm = -52;
+    pose.backArm = 84;
+    pose.frontLeg = -48;
+    pose.backLeg = 24;
+    pose.torsoTilt = -20;
+    pose.aura = 0.36;
+  }
+
+  if (fighter.character.id === "juri" && fighter.action?.key === "heavy") {
+    pose.frontArm = -24;
+    pose.backArm = 32;
+    pose.frontLeg = -88;
+    pose.backLeg = 38;
+    pose.torsoTilt = -24;
+    pose.headTilt = -6;
+    pose.aura = 0.28;
+  }
+
+  if (fighter.character.id === "juri" && fighter.action?.move.kind === "projectile") {
+    pose.frontArm = -14;
+    pose.backArm = 28;
+    pose.frontLeg = -76;
+    pose.backLeg = 40;
+    pose.torsoTilt = -22;
+    pose.headTilt = -8;
+    pose.aura = 0.34;
+  }
+
+  if (fighter.character.id === "juri" && fighter.action?.move.kind === "dash") {
+    pose.frontArm = -42;
+    pose.backArm = 72;
+    pose.frontLeg = -96;
+    pose.backLeg = 30;
+    pose.torsoTilt = -30;
+    pose.headTilt = -10;
+    pose.aura = 0.4;
   }
 
   return pose;
