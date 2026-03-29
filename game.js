@@ -137,7 +137,7 @@ const roster = [
     title: "高速腿技与气功压制专家",
     intro: "依靠百裂脚抢节奏，用气功拳铺路，再以旋圆蹴追击。",
     trait: "速度型：轻击与旋圆蹴可多段命中，空中控制最佳。",
-    stats: { health: 96, speed: 5.25, jump: 9.3, power: 7.7, defense: 8, meterGain: 1.08, airControl: 0.34, weight: 0.9, damageTaken: 1.03 },
+    stats: { health: 96, speed: 5.7, jump: 9.9, power: 7.7, defense: 8, meterGain: 1.08, airControl: 0.38, weight: 0.9, damageTaken: 1.03 },
     palette: {
       primary: "#2d78df",
       secondary: "#f9d870",
@@ -260,7 +260,7 @@ const roster = [
     title: "高火力爆发的修罗斗士",
     intro: "豪波动拳与豪升龙拳的压迫感极强，但体力相对更薄。",
     trait: "爆发型：伤害最高，波动压制最猛，但承伤也更高。",
-    stats: { health: 90, speed: 4.95, jump: 9.5, power: 10.1, defense: 7.6, meterGain: 1.1, airControl: 0.28, weight: 0.92, damageTaken: 1.12 },
+    stats: { health: 90, speed: 5.25, jump: 10, power: 10.1, defense: 7.6, meterGain: 1.1, airControl: 0.32, weight: 0.92, damageTaken: 1.12 },
     palette: {
       primary: "#43323f",
       secondary: "#b5444c",
@@ -322,7 +322,7 @@ const roster = [
     title: "轻快灵动的樱花流格斗少女",
     intro: "用樱花波动拳逼出破绽，再靠春风脚和樱花升龙拳连续追击。",
     trait: "成长型：回气最快，技能冷却最短，循环最顺。",
-    stats: { health: 100, speed: 4.65, jump: 9, power: 8.2, defense: 8.4, meterGain: 1.18, airControl: 0.29, weight: 0.96, damageTaken: 1 },
+    stats: { health: 100, speed: 5.05, jump: 9.5, power: 8.2, defense: 8.4, meterGain: 1.18, airControl: 0.34, weight: 0.96, damageTaken: 1 },
     palette: {
       primary: "#f3f1f6",
       secondary: "#ff7088",
@@ -918,6 +918,7 @@ function makeFighter(slot, character, x) {
     meter: 22,
     moveCooldowns: { skill1: 0, skill2: 0 },
     state: "idle",
+    intentX: 0,
     action: null,
     hitstun: 0,
     flashTimer: 0,
@@ -1311,6 +1312,7 @@ function updateFighterState(fighter, opponent, dt, dtMs) {
   fighter.moveCooldowns.skill2 = Math.max(0, fighter.moveCooldowns.skill2 - dtMs);
   fighter.flashTimer = Math.max(0, fighter.flashTimer - dtMs);
   fighter.guardTimer = Math.max(0, fighter.guardTimer - dtMs);
+  fighter.intentX = 0;
 
   if (fighter.ko) {
     fighter.vx *= 0.96;
@@ -1328,6 +1330,7 @@ function updateFighterState(fighter, opponent, dt, dtMs) {
     const jump = wasPressed(fighter.controller.up);
     const down = isDown(fighter.controller.down);
     const direction = (right ? 1 : 0) - (left ? 1 : 0);
+    fighter.intentX = direction;
 
     if (fighter.y === 0) {
       if (jump) {
@@ -1398,8 +1401,13 @@ function solveSpacing() {
 
   const delta = b.x - a.x;
   const distance = Math.abs(delta);
-  if (distance < STAGE.minGap) {
-    const push = (STAGE.minGap - distance) / 2;
+  const bothNeutral = [a, b].every((fighter) => !fighter.action && fighter.hitstun <= 0 && !fighter.ko);
+  const movingApart = a.intentX * delta < 0 && b.intentX * delta > 0;
+  const movingSameWay = bothNeutral && a.intentX !== 0 && a.intentX === b.intentX;
+  const targetGap = movingApart ? 34 : movingSameWay ? 42 : bothNeutral ? 50 : STAGE.minGap;
+
+  if (distance < targetGap) {
+    const push = (targetGap - distance) / 2;
     if (delta >= 0) {
       a.x -= push;
       b.x += push;
@@ -1408,6 +1416,13 @@ function solveSpacing() {
       b.x -= push;
     }
   }
+
+  if (bothNeutral && movingApart) {
+    const release = Math.min(1.8, Math.max(0, targetGap - distance) * 0.12 + 0.7);
+    a.x += a.intentX * release;
+    b.x += b.intentX * release;
+  }
+
   a.x = clamp(a.x, STAGE.leftBound, STAGE.rightBound);
   b.x = clamp(b.x, STAGE.leftBound, STAGE.rightBound);
 }
