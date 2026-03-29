@@ -377,6 +377,245 @@ const roster = [
         stun: 410
       }
     }
+  },
+  {
+    id: "blanka",
+    name: "布兰卡",
+    title: "野性爆发与贴身放电怪兽",
+    intro: "靠抓挠和滚动贴脸，用滚雷放电把近身缠斗变成自己的节奏。",
+    trait: "野性型：贴身爆发很凶，放电守身，但中远距离最弱。",
+    stats: { health: 102, speed: 5.1, jump: 9.8, power: 8.8, defense: 8.2, meterGain: 1.02, airControl: 0.31, weight: 1.02, damageTaken: 1.01 },
+    palette: {
+      primary: "#4ebc4a",
+      secondary: "#f69435",
+      trim: "#3a5c27",
+      aura: "#d6f54c",
+      skin: "#8bcf58",
+      dark: "#f57a28"
+    },
+    costume: {
+      hair: "M -28 -146 L -18 -182 L -8 -154 L 0 -188 L 10 -154 L 20 -182 L 30 -146 L 18 -130 Q 2 -140 -24 -130 Z",
+      emblem: "M -12 -100 Q 0 -116 12 -100 Q 0 -82 -12 -100 Z",
+      belt: "#f69435"
+    },
+    moves: {
+      light: { label: "野兽抓挠", damage: 4, reach: 90, height: 104, startup: 44, active: 108, recovery: 168, hits: 2, hitInterval: 48, push: 3.6, stun: 130 },
+      heavy: { label: "飞身压扑", damage: 10, reach: 118, height: 110, startup: 92, active: 120, recovery: 290, dash: 8.2, push: 10.2, stun: 330 },
+      skill1: {
+        label: "滚雷放电",
+        kind: "aura",
+        damage: 4,
+        meterCost: 24,
+        cooldown: 1360,
+        startup: 60,
+        active: 220,
+        recovery: 420,
+        auraRadius: 96,
+        auraHeight: 126,
+        hits: 4,
+        hitInterval: 52,
+        push: 3.1,
+        stun: 120
+      },
+      skill2: {
+        label: "滚动攻击",
+        kind: "dash",
+        damage: 7,
+        meterCost: 28,
+        cooldown: 1450,
+        startup: 74,
+        active: 176,
+        recovery: 430,
+        burstSpeed: 10.2,
+        burstLift: 3.8,
+        reach: 130,
+        height: 122,
+        hits: 2,
+        hitInterval: 80,
+        push: 11.2,
+        stun: 340
+      }
+    }
+  },
+  {
+    id: "dhalsim",
+    name: "达尔西姆",
+    title: "长手长脚与火焰压制的瑜伽大师",
+    intro: "用超长拳脚控制距离，再用瑜伽火与瑜伽火焰封锁接近路线。",
+    trait: "牵制型：普攻距离最远，火焰压制最稳，但体格最薄最慢。",
+    stats: { health: 92, speed: 3.8, jump: 8.9, power: 8.1, defense: 7.8, meterGain: 1.06, airControl: 0.18, weight: 0.84, damageTaken: 1.08 },
+    palette: {
+      primary: "#c68f4c",
+      secondary: "#ffb95d",
+      trim: "#a74e1f",
+      aura: "#ff8f4f",
+      skin: "#dba56b",
+      dark: "#4b2c1c"
+    },
+    costume: {
+      hair: "M -6 -160 Q 0 -176 6 -160 L 8 -142 H -8 Z",
+      emblem: "M -12 -102 H 12 L 0 -82 Z",
+      belt: "#9c3422"
+    },
+    moves: {
+      light: { label: "伸缩直拳", damage: 5, reach: 138, height: 102, startup: 62, active: 90, recovery: 190, push: 4.2, stun: 180 },
+      heavy: { label: "长脚鞭踢", damage: 9, reach: 172, height: 118, startup: 126, active: 120, recovery: 260, dash: 1.2, push: 7.6, stun: 240 },
+      skill1: {
+        label: "瑜伽火",
+        kind: "projectile",
+        damage: 10,
+        meterCost: 18,
+        cooldown: 920,
+        castTime: 160,
+        recovery: 390,
+        projectileSpeed: 6.6,
+        projectileRadius: 18,
+        projectileHeight: 120,
+        projectileShape: "ember",
+        projectileWaveAmp: 0.4,
+        projectileWaveSpeed: 0.1,
+        projectileLife: 2500,
+        push: 7.2,
+        stun: 280
+      },
+      skill2: {
+        label: "瑜伽火焰",
+        kind: "aura",
+        damage: 6,
+        meterCost: 26,
+        cooldown: 1500,
+        startup: 92,
+        active: 180,
+        recovery: 460,
+        auraRadius: 116,
+        auraHeight: 122,
+        frontOnly: true,
+        hits: 2,
+        hitInterval: 96,
+        push: 6.5,
+        stun: 260
+      }
+    }
+  },
+  {
+    id: "sagat",
+    name: "萨格特",
+    title: "重炮牵制与高压升龙的泰拳帝王",
+    intro: "虎炮封路、虎膝切入，再以猛虎升龙破惩罚一切冒进。",
+    trait: "重炮型：体型最重、火力最足，虎炮压制极强，但机动偏慢。",
+    stats: { health: 114, speed: 4.0, jump: 8.0, power: 9.7, defense: 8.9, meterGain: 0.88, airControl: 0.17, weight: 1.18, damageTaken: 0.95 },
+    palette: {
+      primary: "#c7ac68",
+      secondary: "#f7e1a8",
+      trim: "#7d2c16",
+      aura: "#ffd15f",
+      skin: "#c99866",
+      dark: "#25222d"
+    },
+    costume: {
+      hair: "M -16 -154 H 16 L 12 -138 H -12 Z",
+      emblem: "M -10 -100 H 10 L 4 -84 H -4 Z",
+      belt: "#7d2c16"
+    },
+    moves: {
+      light: { label: "泰拳刺拳", damage: 7, reach: 92, height: 104, startup: 60, active: 92, recovery: 180, push: 5.4, stun: 220 },
+      heavy: { label: "虎膝", damage: 11, reach: 118, height: 110, startup: 94, active: 116, recovery: 320, dash: 8.0, push: 11, stun: 350 },
+      skill1: {
+        label: "虎炮",
+        kind: "projectile",
+        damage: 12,
+        meterCost: 20,
+        cooldown: 950,
+        castTime: 150,
+        recovery: 420,
+        projectileSpeed: 10.8,
+        projectileRadius: 24,
+        projectileHeight: 124,
+        projectileShape: "tiger",
+        projectileWaveAmp: 0.2,
+        projectileWaveSpeed: 0.08,
+        projectileLife: 2000,
+        push: 9,
+        stun: 340
+      },
+      skill2: {
+        label: "猛虎升龙破",
+        kind: "burst",
+        damage: 16,
+        meterCost: 30,
+        cooldown: 1600,
+        startup: 84,
+        active: 128,
+        recovery: 460,
+        burstSpeed: 4.8,
+        burstLift: 10.6,
+        reach: 96,
+        height: 164,
+        push: 12.4,
+        stun: 450
+      }
+    }
+  },
+  {
+    id: "cammy",
+    name: "卡米",
+    title: "高速突进与精准反打的特种斗士",
+    intro: "靠螺旋箭撕开防线，再用加农尖峰完成高速斩切式反击。",
+    trait: "突袭型：冲刺和反打最狠，移动最灵，但血量和容错偏低。",
+    stats: { health: 94, speed: 5.45, jump: 10.1, power: 8.4, defense: 7.9, meterGain: 1.08, airControl: 0.36, weight: 0.86, damageTaken: 1.05 },
+    palette: {
+      primary: "#4b8d58",
+      secondary: "#d3434f",
+      trim: "#1f314a",
+      aura: "#8fd6ff",
+      skin: "#efc7a2",
+      dark: "#e0c56a"
+    },
+    costume: {
+      hair: "M -8 -152 Q -24 -178 -4 -162 L 6 -166 Q 28 -180 12 -152 L 8 -136 Q 0 -140 -8 -136 Z",
+      emblem: "M -14 -100 H 14 L 0 -84 Z",
+      belt: "#1f314a"
+    },
+    moves: {
+      light: { label: "迅斩刺拳", damage: 4, reach: 82, height: 96, startup: 44, active: 98, recovery: 160, hits: 2, hitInterval: 42, push: 3.5, stun: 130 },
+      heavy: { label: "旋棘踢", damage: 9, reach: 106, height: 112, startup: 90, active: 112, recovery: 260, dash: 6.8, push: 9, stun: 300 },
+      skill1: {
+        label: "螺旋箭",
+        kind: "dash",
+        damage: 6,
+        meterCost: 22,
+        cooldown: 1160,
+        startup: 62,
+        active: 168,
+        recovery: 370,
+        burstSpeed: 10.4,
+        burstLift: 2.8,
+        reach: 132,
+        height: 110,
+        hits: 2,
+        hitInterval: 70,
+        push: 10.5,
+        stun: 320
+      },
+      skill2: {
+        label: "加农尖峰",
+        kind: "burst",
+        damage: 7,
+        meterCost: 28,
+        cooldown: 1420,
+        startup: 72,
+        active: 132,
+        recovery: 410,
+        burstSpeed: 5.2,
+        burstLift: 10.6,
+        reach: 88,
+        height: 158,
+        hits: 2,
+        hitInterval: 72,
+        push: 11.8,
+        stun: 400
+      }
+    }
   }
 ];
 
@@ -536,6 +775,110 @@ const styleProfiles = {
     bounceScale: 1.4,
     shadowScale: 0.94,
     trailWidth: 8
+  },
+  blanka: {
+    shoulder: 30,
+    hips: 20,
+    armScale: 1.04,
+    legScale: 1.1,
+    torsoScaleX: 1.08,
+    torsoScaleY: 0.96,
+    headScale: 1.08,
+    headOffset: 0,
+    nameY: -196,
+    previewScaleX: 1.05,
+    previewScaleY: 1.02,
+    previewYOffset: 2,
+    auraBase: 0.18,
+    swayScale: 1.35,
+    walkScale: 1.15,
+    frontArmBias: -8,
+    backArmBias: 14,
+    frontLegBias: 10,
+    backLegBias: -4,
+    torsoTiltBias: 4,
+    headTiltBias: 2,
+    bounceScale: 0.8,
+    shadowScale: 1.08,
+    trailWidth: 12
+  },
+  dhalsim: {
+    shoulder: 23,
+    hips: 16,
+    armScale: 1.28,
+    legScale: 1.28,
+    torsoScaleX: 0.82,
+    torsoScaleY: 1.02,
+    headScale: 0.96,
+    headOffset: -2,
+    nameY: -198,
+    previewScaleX: 0.95,
+    previewScaleY: 0.98,
+    previewYOffset: 2,
+    auraBase: 0.09,
+    swayScale: 0.55,
+    walkScale: 0.7,
+    frontArmBias: -26,
+    backArmBias: 4,
+    frontLegBias: 18,
+    backLegBias: -6,
+    torsoTiltBias: -3,
+    headTiltBias: 0,
+    bounceScale: 0.2,
+    shadowScale: 0.88,
+    trailWidth: 7
+  },
+  sagat: {
+    shoulder: 34,
+    hips: 20,
+    armScale: 1.1,
+    legScale: 1.06,
+    torsoScaleX: 1.16,
+    torsoScaleY: 1.1,
+    headScale: 1.08,
+    headOffset: -2,
+    nameY: -204,
+    previewScaleX: 1.1,
+    previewScaleY: 1.08,
+    previewYOffset: -2,
+    auraBase: 0.14,
+    swayScale: 0.5,
+    walkScale: 0.78,
+    frontArmBias: -2,
+    backArmBias: 20,
+    frontLegBias: 2,
+    backLegBias: 8,
+    torsoTiltBias: 2,
+    headTiltBias: 1,
+    bounceScale: 0.25,
+    shadowScale: 1.12,
+    trailWidth: 13
+  },
+  cammy: {
+    shoulder: 24,
+    hips: 18,
+    armScale: 0.96,
+    legScale: 1.02,
+    torsoScaleX: 0.88,
+    torsoScaleY: 0.95,
+    headScale: 0.94,
+    headOffset: 2,
+    nameY: -192,
+    previewScaleX: 0.92,
+    previewScaleY: 0.94,
+    previewYOffset: 4,
+    auraBase: 0.12,
+    swayScale: 1.35,
+    walkScale: 1.25,
+    frontArmBias: -20,
+    backArmBias: 10,
+    frontLegBias: 12,
+    backLegBias: -10,
+    torsoTiltBias: -8,
+    headTiltBias: -3,
+    bounceScale: 1.45,
+    shadowScale: 0.92,
+    trailWidth: 9
   }
 };
 
@@ -699,6 +1042,32 @@ function getPreviewAccessoryMarkup(character) {
         <path d="M -12 -144 Q -36 -158 -54 -138" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round"></path>
         <path d="M -24 -108 L 0 -78 L 24 -108" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
       `;
+    case "blanka":
+      return `
+        <path d="M -28 -132 Q 0 -118 28 -132" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
+        <path d="M -34 -26 H 34" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
+      `;
+    case "dhalsim":
+      return `
+        <g fill="${palette.secondary}" opacity="0.92">
+          <circle cx="-20" cy="-114" r="5"></circle>
+          <circle cx="-8" cy="-108" r="5"></circle>
+          <circle cx="8" cy="-108" r="5"></circle>
+          <circle cx="20" cy="-114" r="5"></circle>
+        </g>
+        <path d="M -8 -156 H 8" stroke="${palette.trim}" stroke-width="4" stroke-linecap="round"></path>
+      `;
+    case "sagat":
+      return `
+        <path d="M -6 -154 H 18" stroke="${palette.trim}" stroke-width="8" stroke-linecap="round"></path>
+        <path d="M -18 -118 Q 0 -96 20 -70" fill="none" stroke="${palette.secondary}" stroke-width="6" opacity="0.72"></path>
+      `;
+    case "cammy":
+      return `
+        <path d="M -24 -160 Q 0 -182 24 -160 L 18 -142 H -18 Z" fill="${palette.secondary}" opacity="0.9"></path>
+        <path d="M -18 -136 Q -44 -86 -54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
+        <path d="M 18 -136 Q 44 -86 54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
+      `;
     default:
       return "";
   }
@@ -793,6 +1162,77 @@ function decorateFighterParts(fighter, parts) {
         fill: "none",
         stroke: palette.secondary,
         "stroke-width": 8,
+        "stroke-linecap": "round"
+      });
+      break;
+    case "blanka":
+      add(parts.head, "path", {
+        d: "M -28 -132 Q 0 -118 28 -132",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 8,
+        "stroke-linecap": "round"
+      });
+      add(parts.torso, "path", {
+        d: "M -34 -26 H 34",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 8,
+        "stroke-linecap": "round"
+      });
+      break;
+    case "dhalsim":
+      [-20, -8, 8, 20].forEach((x) => {
+        add(parts.body, "circle", {
+          cx: x,
+          cy: x === -20 || x === 20 ? -114 : -108,
+          r: 5,
+          fill: palette.secondary,
+          opacity: 0.92
+        });
+      });
+      add(parts.head, "path", {
+        d: "M -8 -156 H 8",
+        fill: "none",
+        stroke: palette.trim,
+        "stroke-width": 4,
+        "stroke-linecap": "round"
+      });
+      break;
+    case "sagat":
+      add(parts.head, "path", {
+        d: "M -6 -154 H 18",
+        fill: "none",
+        stroke: palette.trim,
+        "stroke-width": 8,
+        "stroke-linecap": "round"
+      });
+      add(parts.torso, "path", {
+        d: "M -18 -118 Q 0 -96 20 -70",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 6,
+        opacity: 0.72
+      });
+      break;
+    case "cammy":
+      add(parts.head, "path", {
+        d: "M -24 -160 Q 0 -182 24 -160 L 18 -142 H -18 Z",
+        fill: palette.secondary,
+        opacity: 0.9
+      });
+      add(parts.body, "path", {
+        d: "M -18 -136 Q -44 -86 -54 -30",
+        fill: "none",
+        stroke: palette.dark,
+        "stroke-width": 7,
+        "stroke-linecap": "round"
+      });
+      add(parts.body, "path", {
+        d: "M 18 -136 Q 44 -86 54 -30",
+        fill: "none",
+        stroke: palette.dark,
+        "stroke-width": 7,
         "stroke-linecap": "round"
       });
       break;
@@ -1253,6 +1693,43 @@ function tryResolveMeleeHit(fighter, opponent) {
   }
 }
 
+function tryResolveAuraHit(fighter, opponent) {
+  if (!fighter.action) {
+    return;
+  }
+
+  const { move, elapsed } = fighter.action;
+  const maxHits = move.hits || 1;
+  if (fighter.action.hitCount >= maxHits) {
+    fighter.action.hitApplied = true;
+    return;
+  }
+
+  const startup = move.startup || 0;
+  const activeEnd = startup + (move.active || 0);
+  if (elapsed < startup || elapsed > activeEnd) {
+    return;
+  }
+
+  const xDistance = Math.abs(opponent.x - fighter.x);
+  const yDistance = Math.abs(opponent.y - fighter.y);
+  const frontOk = move.frontOnly ? fighter.facing * (opponent.x - fighter.x) > -6 : true;
+  if (!frontOk || xDistance > (move.auraRadius || 96) || yDistance > (move.auraHeight || 120)) {
+    return;
+  }
+
+  if (fighter.action.hitCount > 0 && elapsed - fighter.action.lastHitAt < (move.hitInterval || 90)) {
+    return;
+  }
+
+  const didHit = registerHit(fighter, opponent, move);
+  if (didHit) {
+    fighter.action.hitCount += 1;
+    fighter.action.lastHitAt = elapsed;
+    fighter.action.hitApplied = fighter.action.hitCount >= maxHits;
+  }
+}
+
 function updateAction(fighter, opponent, dt, dtMs) {
   if (!fighter.action) {
     return;
@@ -1287,7 +1764,9 @@ function updateAction(fighter, opponent, dt, dtMs) {
     spawnProjectile(fighter, move);
   }
 
-  if (action.key === "light" || action.key === "heavy" || move.kind === "burst" || move.kind === "dash") {
+  if (move.kind === "aura") {
+    tryResolveAuraHit(fighter, opponent);
+  } else if (action.key === "light" || action.key === "heavy" || move.kind === "burst" || move.kind === "dash") {
     tryResolveMeleeHit(fighter, opponent);
   }
 
@@ -1540,6 +2019,53 @@ function renderProjectiles() {
           opacity: 0.86
         })
       );
+    } else if (projectile.shape === "ember") {
+      group.append(
+        createSvgElement("path", {
+          class: "projectile-core",
+          d: `M ${-projectile.radius * 1.6} 0 Q ${-projectile.radius * 0.2} ${-projectile.radius * 1.1} ${projectile.radius * 0.8} 0 Q ${-projectile.radius * 0.2} ${projectile.radius * 1.1} ${-projectile.radius * 1.6} 0`,
+          fill: projectile.color,
+          opacity: 0.34
+        }),
+        createSvgElement("circle", {
+          class: "projectile-core",
+          r: projectile.radius * 0.88,
+          fill: projectile.color,
+          opacity: 0.9
+        }),
+        createSvgElement("circle", {
+          r: projectile.radius * 0.36,
+          fill: "#fff2cf",
+          opacity: 0.88
+        })
+      );
+    } else if (projectile.shape === "tiger") {
+      group.append(
+        createSvgElement("ellipse", {
+          class: "projectile-core",
+          rx: projectile.radius + 12,
+          ry: projectile.radius * 0.72,
+          fill: projectile.color,
+          opacity: 0.24
+        }),
+        createSvgElement("ellipse", {
+          class: "projectile-core",
+          rx: projectile.radius,
+          ry: projectile.radius * 0.6,
+          fill: projectile.color,
+          opacity: 0.92
+        })
+      );
+      [-0.6, 0, 0.6].forEach((offset) => {
+        group.appendChild(
+          createSvgElement("path", {
+            d: `M ${offset * projectile.radius * 1.4} ${-projectile.radius * 0.58} V ${projectile.radius * 0.58}`,
+            stroke: "#7d2c16",
+            "stroke-width": 2.6,
+            opacity: 0.7
+          })
+        );
+      });
     } else if (projectile.shape === "petal") {
       [-0.6, 0, 0.6].forEach((offset) => {
         group.appendChild(
@@ -1774,6 +2300,82 @@ function getPose(fighter, time) {
     pose.aura = 0.3;
   }
 
+  if (fighter.character.id === "blanka" && fighter.action?.move.kind === "aura") {
+    pose.frontArm = -52;
+    pose.backArm = 62;
+    pose.frontLeg = -18;
+    pose.backLeg = 22;
+    pose.torsoTilt = 8;
+    pose.torsoY = 16;
+    pose.headTilt = 10;
+    pose.aura = 0.44;
+  }
+
+  if (fighter.character.id === "dhalsim" && fighter.action?.key === "light") {
+    pose.frontArm = -136;
+    pose.backArm = 16;
+    pose.frontLeg = 4;
+    pose.backLeg = -2;
+    pose.torsoTilt = -10;
+    pose.aura = 0.18;
+  }
+
+  if (fighter.character.id === "dhalsim" && fighter.action?.key === "heavy") {
+    pose.frontArm = -28;
+    pose.backArm = 10;
+    pose.frontLeg = -104;
+    pose.backLeg = 18;
+    pose.torsoTilt = -12;
+    pose.aura = 0.2;
+  }
+
+  if (fighter.character.id === "dhalsim" && fighter.action?.move.kind === "aura") {
+    pose.frontArm = -82;
+    pose.backArm = -14;
+    pose.frontLeg = 12;
+    pose.backLeg = 8;
+    pose.torsoTilt = -18;
+    pose.headTilt = -8;
+    pose.aura = 0.36;
+  }
+
+  if (fighter.character.id === "sagat" && fighter.action?.move.kind === "projectile") {
+    pose.frontArm = -112;
+    pose.backArm = 54;
+    pose.frontLeg = -8;
+    pose.backLeg = 14;
+    pose.torsoTilt = -6;
+    pose.aura = 0.28;
+  }
+
+  if (fighter.character.id === "sagat" && fighter.action?.move.kind === "burst") {
+    pose.frontArm = -4;
+    pose.backArm = 126;
+    pose.frontLeg = -24;
+    pose.backLeg = 68;
+    pose.torsoTilt = -14;
+    pose.aura = 0.34;
+  }
+
+  if (fighter.character.id === "cammy" && fighter.action?.move.kind === "dash") {
+    pose.frontArm = -88;
+    pose.backArm = 38;
+    pose.frontLeg = -84;
+    pose.backLeg = 18;
+    pose.torsoTilt = -28;
+    pose.headTilt = -8;
+    pose.aura = 0.34;
+  }
+
+  if (fighter.character.id === "cammy" && fighter.action?.move.kind === "burst") {
+    pose.frontArm = -18;
+    pose.backArm = 118;
+    pose.frontLeg = -22;
+    pose.backLeg = 62;
+    pose.torsoTilt = -22;
+    pose.aura = 0.36;
+  }
+
   return pose;
 }
 
@@ -1830,8 +2432,18 @@ function endMatch(winner, message) {
   state.projectiles = [];
   renderProjectiles();
   elements.battleOverlay.classList.remove("hidden");
+  if (winner) {
+    const winnerTag = winner.slot === "p1" ? "1P" : "2P";
+    const winnerLabel = `${winnerTag} ${winner.character.name}`;
+    const winnerMessage = `${winnerLabel} 获胜`;
+    elements.overlayTitle.textContent = winnerMessage;
+    elements.overlaySubtitle.textContent = `${winnerLabel} 取得本回合胜利。`;
+    setAnnouncer(winnerMessage, 2500);
+    return;
+  }
+
   elements.overlayTitle.textContent = message;
-  elements.overlaySubtitle.textContent = winner ? `${winner.character.name} 取得本回合胜利。` : "双方体力相同，战成平局。";
+  elements.overlaySubtitle.textContent = "双方体力相同，战成平局。";
   setAnnouncer(message, 2500);
 }
 
