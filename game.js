@@ -1076,20 +1076,20 @@ const controls = {
     right: "KeyD",
     up: "KeyW",
     down: "KeyS",
-    light: "KeyF",
-    heavy: "KeyG",
-    skill1: "KeyH",
-    skill2: "KeyT"
+    light: "KeyZ",
+    heavy: "KeyX",
+    skill1: "KeyC",
+    skill2: "KeyV"
   },
   p2: {
     left: "ArrowLeft",
     right: "ArrowRight",
     up: "ArrowUp",
     down: "ArrowDown",
-    light: "KeyK",
-    heavy: "KeyL",
-    skill1: "Semicolon",
-    skill2: "KeyP"
+    light: "KeyM",
+    heavy: "Comma",
+    skill1: "Period",
+    skill2: "Slash"
   }
 };
 
@@ -1156,14 +1156,14 @@ function getCharacter(id) {
 
 function keyName(code) {
   const map = {
-    KeyF: "F",
-    KeyG: "G",
-    KeyH: "H",
-    KeyT: "T",
-    KeyK: "K",
-    KeyL: "L",
-    KeyP: "P",
-    Semicolon: ";",
+    KeyZ: "Z",
+    KeyX: "X",
+    KeyC: "C",
+    KeyV: "V",
+    KeyM: "M",
+    Comma: ",",
+    Period: ".",
+    Slash: "/",
     KeyW: "W",
     KeyA: "A",
     KeyS: "S",
