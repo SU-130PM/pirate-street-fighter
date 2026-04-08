@@ -18,6 +18,10 @@ const BATTLE_TUNING = {
 };
 
 const PROJECTILE_HITSTUN_MS = 500;
+const GSAP = window.gsap;
+const CROUCH_METER_MULTIPLIER = 1.75;
+const CROUCH_PROJECTILE_CENTER_Y = 82;
+const CROUCH_PROJECTILE_TOLERANCE = 34;
 
 const roster = [
   {
@@ -1600,13 +1604,16 @@ function makeFighter(slot, character, x) {
     moveCooldowns: { skill1: 0, skill2: 0 },
     state: "idle",
     intentX: 0,
+    actionSerial: 0,
+    reactionSerial: 0,
     action: null,
     hitstun: 0,
     flashTimer: 0,
     guardTimer: 0,
     ko: false,
     controller,
-    dom: null
+    dom: null,
+    animation: null
   };
 }
 
@@ -1724,10 +1731,15 @@ function buildScene() {
 
   state.fighters.forEach((fighter) => {
     elements.fighterLayer.appendChild(createFighterNode(fighter));
+    fighter.animation = createFighterAnimation(fighter);
+    syncFighterAnimation(fighter, true);
   });
+
+  renderFighters();
 }
 
 function startMatch() {
+  clearAllFighterAnimations();
   const p1Character = getCharacter(state.selection.p1);
   const p2Character = getCharacter(state.selection.p2);
   resetInputState();
@@ -1756,6 +1768,7 @@ function startMatch() {
 }
 
 function backToSelection() {
+  clearAllFighterAnimations();
   resetInputState();
   state.phase = "select";
   cancelAnimationFrame(state.loopId);
@@ -1800,6 +1813,7 @@ function startAction(fighter, actionKey) {
   fighter.meter = clamp(fighter.meter - (move.meterCost || 0), 0, 100);
   fighter.moveCooldowns[actionKey] = move.cooldown || 0;
   fighter.action = {
+    id: ++fighter.actionSerial,
     key: actionKey,
     move,
     elapsed: 0,
@@ -1853,6 +1867,7 @@ function registerHit(attacker, defender, move, sourceType = "melee") {
   defender.vx = (attacker.facing * (guarding ? move.push * 0.45 : armorActive ? move.push * 0.25 : move.push)) / weight;
   defender.vy = (guarding ? 1.8 : sourceType === "projectile" ? 2.2 : move.kind === "burst" || move.kind === "dash" ? 6.2 : 3.6) / weight;
   defender.state = guarding ? "guard" : armorActive ? defender.state : "hit";
+  defender.reactionSerial += 1;
   if (armorActive) {
     defender.action.armorSpent = true;
   }
@@ -1898,6 +1913,10 @@ function spawnProjectile(fighter, move) {
 
 function actionTime(move) {
   return (move.startup || move.castTime || 0) + (move.active || 0) + (move.recovery || 0);
+}
+
+function isCrouching(fighter) {
+  return fighter.y === 0 && fighter.state === "crouch" && !fighter.action && fighter.hitstun <= 0 && !fighter.ko;
 }
 
 function tryResolveMeleeHit(fighter, opponent) {
@@ -2062,9 +2081,9 @@ function updateFighterState(fighter, opponent, dt, dtMs) {
       }
 
       if (down) {
-        fighter.state = "guard";
+        fighter.state = "crouch";
         fighter.guardTimer = 120;
-        fighter.vx *= 0.78;
+        fighter.vx *= 0.62;
       } else if (direction !== 0) {
         fighter.vx += (direction * fighter.character.stats.speed * BATTLE_TUNING.groundSpeedScale - fighter.vx) * 0.34;
         fighter.state = "walk";
@@ -2109,7 +2128,12 @@ function updateFighterState(fighter, opponent, dt, dtMs) {
   }
 
   fighter.x = clamp(fighter.x, STAGE.leftBound, STAGE.rightBound);
-  fighter.meter = clamp(fighter.meter + STAGE.baseMeterGain * dtMs * (fighter.character.stats.meterGain || 1), 0, 100);
+  const meterMultiplier = isCrouching(fighter) ? CROUCH_METER_MULTIPLIER : 1;
+  fighter.meter = clamp(
+    fighter.meter + STAGE.baseMeterGain * dtMs * (fighter.character.stats.meterGain || 1) * meterMultiplier,
+    0,
+    100
+  );
 }
 
 function solveSpacing() {
@@ -2167,9 +2191,12 @@ function updateProjectiles(dt, dtMs) {
       return;
     }
 
+    const ducking = isCrouching(target);
+    const hurtboxCenterY = target.y + (ducking ? CROUCH_PROJECTILE_CENTER_Y : 106);
+    const hurtboxTolerance = projectile.radius + (ducking ? CROUCH_PROJECTILE_TOLERANCE : 52);
     const hitX = Math.abs(projectile.x - target.x);
-    const hitY = Math.abs(projectile.y - (target.y + 106));
-    if (hitX < projectile.radius + 36 && hitY < projectile.radius + 52) {
+    const hitY = Math.abs(projectile.y - hurtboxCenterY);
+    if (hitX < projectile.radius + 36 && hitY < hurtboxTolerance) {
       registerHit(owner, target, projectile.move, "projectile");
       remove.push(index);
       return;
@@ -2433,10 +2460,8 @@ function renderEffects() {
   });
 }
 
-function getPose(fighter, time) {
+function finalizePose(fighter, rawPose = {}) {
   const profile = fighter.profile;
-  const sway = Math.sin(time * 0.01 + (fighter.slot === "p1" ? 0 : Math.PI)) * 4 * profile.swayScale;
-  const walk = Math.sin(time * 0.02 + fighter.x * 0.02) * 22 * profile.walkScale;
   const pose = {
     backArm: 12,
     frontArm: -10,
@@ -2447,96 +2472,15 @@ function getPose(fighter, time) {
     headTilt: 0,
     shadow: 1,
     aura: profile.auraBase,
-    nameY: profile.nameY
+    nameY: profile.nameY,
+    figureY: 0,
+    figureScaleX: 1,
+    figureScaleY: 1,
+    trailOpacity: 0,
+    trailReach: 96,
+    trailLift: 74,
+    ...rawPose
   };
-
-  if (fighter.state === "walk") {
-    pose.backArm = -22 - walk * 0.45;
-    pose.frontArm = 22 + walk * 0.45;
-    pose.backLeg = 18 + walk;
-    pose.frontLeg = -18 - walk;
-    pose.torsoY = Math.abs(walk) * 0.08;
-    pose.aura = 0.14;
-  } else if (fighter.state === "jump") {
-    pose.backArm = -40;
-    pose.frontArm = 58;
-    pose.backLeg = 42;
-    pose.frontLeg = -34;
-    pose.torsoTilt = -6;
-    pose.shadow = 0.85;
-    pose.aura = 0.18;
-  } else if (fighter.state === "guard") {
-    pose.backArm = -14;
-    pose.frontArm = -74;
-    pose.backLeg = 12;
-    pose.frontLeg = 30;
-    pose.torsoTilt = -10;
-    pose.torsoY = 10;
-    pose.headTilt = -6;
-    pose.aura = 0.22;
-  } else if (fighter.state === "hit") {
-    pose.backArm = 58;
-    pose.frontArm = 40;
-    pose.backLeg = 22;
-    pose.frontLeg = -22;
-    pose.torsoTilt = 14;
-    pose.headTilt = 10;
-    pose.aura = 0.18;
-  } else if (fighter.state === "ko") {
-    pose.backArm = 86;
-    pose.frontArm = 100;
-    pose.backLeg = 60;
-    pose.frontLeg = 74;
-    pose.torsoTilt = 86;
-    pose.torsoY = 12;
-    pose.headTilt = 34;
-    pose.shadow = 0.75;
-    pose.aura = 0.04;
-  } else {
-    pose.backArm = 10 + sway;
-    pose.frontArm = -10 - sway * 0.7;
-    pose.backLeg = -6 + sway * 0.25;
-    pose.frontLeg = 6 - sway * 0.25;
-    pose.torsoY = Math.sin(time * 0.015 + fighter.x * 0.01) * 1.5;
-  }
-
-  if (fighter.action) {
-    const { key, move, elapsed } = fighter.action;
-    const progress = elapsed / Math.max(actionTime(move), 1);
-    if (key === "light") {
-      pose.frontArm = progress < 0.45 ? -18 - progress * 70 : -58 + progress * 32;
-      pose.backArm = 26;
-      pose.torsoTilt = -6;
-      pose.frontLeg = 12;
-      pose.aura = 0.2;
-    } else if (key === "heavy") {
-      pose.frontLeg = -44;
-      pose.backLeg = 24;
-      pose.frontArm = -108;
-      pose.backArm = 36;
-      pose.torsoTilt = -14;
-      pose.aura = 0.28;
-    } else if (move.kind === "projectile") {
-      pose.frontArm = -94;
-      pose.backArm = 44;
-      pose.torsoTilt = -10;
-      pose.aura = 0.3;
-    } else if (move.kind === "dash") {
-      pose.frontArm = -42;
-      pose.backArm = 82;
-      pose.frontLeg = -58;
-      pose.backLeg = 22;
-      pose.torsoTilt = -18;
-      pose.aura = 0.34;
-    } else if (move.kind === "burst") {
-      pose.frontArm = -16;
-      pose.backArm = 112;
-      pose.frontLeg = -26;
-      pose.backLeg = 56;
-      pose.torsoTilt = -20;
-      pose.aura = 0.38;
-    }
-  }
 
   pose.backArm += profile.backArmBias;
   pose.frontArm += profile.frontArmBias;
@@ -2544,191 +2488,405 @@ function getPose(fighter, time) {
   pose.frontLeg += profile.frontLegBias;
   pose.torsoTilt += profile.torsoTiltBias;
   pose.headTilt += profile.headTiltBias;
-  pose.torsoY += Math.sin(time * 0.014 + fighter.x * 0.012) * profile.bounceScale;
   pose.shadow *= profile.shadowScale;
   pose.aura = Math.max(pose.aura, profile.auraBase);
 
-  if (fighter.character.id === "chunli" && fighter.action?.key === "light") {
-    pose.frontArm = -22;
-    pose.backArm = 36;
-    pose.frontLeg = -76;
-    pose.backLeg = 34;
-    pose.torsoTilt = -14;
-    pose.aura = 0.24;
+  return pose;
+}
+
+function getIdleRawPose(fighter, variant = 0) {
+  const sway = 7 * fighter.profile.swayScale;
+  const direction = variant === 0 ? 1 : -1;
+  return {
+    backArm: 10 + sway * direction,
+    frontArm: -10 - sway * 0.7 * direction,
+    backLeg: -10 + sway * 0.45 * direction,
+    frontLeg: 10 - sway * 0.45 * direction,
+    torsoY: fighter.profile.bounceScale * 1.4 * direction,
+    figureY: -2 + direction * 3,
+    figureScaleX: 1 + direction * 0.015,
+    figureScaleY: 1 - direction * 0.02,
+    aura: fighter.profile.auraBase + 0.02
+  };
+}
+
+function getWalkRawPose(fighter, variant = 0) {
+  const walk = 28 * fighter.profile.walkScale;
+  const direction = variant === 0 ? 1 : -1;
+  return {
+    backArm: -28 - walk * 0.52 * direction,
+    frontArm: 28 + walk * 0.52 * direction,
+    backLeg: 26 + walk * direction,
+    frontLeg: -26 - walk * direction,
+    torsoY: Math.abs(walk) * 0.1,
+    figureY: direction > 0 ? 4 : -1,
+    figureScaleX: 1 + direction * 0.025,
+    figureScaleY: 0.95 + (direction > 0 ? 0.04 : 0),
+    aura: 0.18
+  };
+}
+
+function getStateRawPose(fighter, state) {
+  switch (state) {
+    case "jump":
+      return { backArm: -62, frontArm: 78, backLeg: 56, frontLeg: -48, torsoTilt: -10, shadow: 0.82, aura: 0.24, figureY: -8, figureScaleX: 0.92, figureScaleY: 1.08 };
+    case "crouch":
+      return { backArm: 12, frontArm: -28, backLeg: 34, frontLeg: 48, torsoTilt: -18, torsoY: 16, headTilt: -8, shadow: 0.88, aura: 0.2, figureY: 10, figureScaleX: 1.05, figureScaleY: 0.82 };
+    case "guard":
+      return { backArm: -12, frontArm: -96, backLeg: 20, frontLeg: 42, torsoTilt: -16, torsoY: 12, headTilt: -8, aura: 0.24, figureY: 6, figureScaleX: 1.04, figureScaleY: 0.94 };
+    case "hit":
+      return { backArm: 78, frontArm: 54, backLeg: 28, frontLeg: -28, torsoTilt: 20, headTilt: 14, aura: 0.2, figureY: -4, figureScaleX: 1.06, figureScaleY: 0.92 };
+    case "ko":
+      return { backArm: 96, frontArm: 114, backLeg: 66, frontLeg: 82, torsoTilt: 92, torsoY: 14, headTilt: 36, shadow: 0.72, aura: 0.04, figureY: 8, figureScaleX: 1.08, figureScaleY: 0.86 };
+    default:
+      return getIdleRawPose(fighter, 0);
+  }
+}
+
+function getActionAnticRawPose(fighter) {
+  if (!fighter.action) {
+    return getIdleRawPose(fighter, 0);
   }
 
-  if (fighter.character.id === "vega" && fighter.action?.move.kind === "dash") {
-    pose.frontArm = -98;
-    pose.backArm = 42;
-    pose.frontLeg = -66;
-    pose.backLeg = 20;
-    pose.torsoTilt = -24;
-    pose.aura = 0.36;
+  const { key, move } = fighter.action;
+
+  if (key === "light") {
+    return { backArm: -8, frontArm: 18, backLeg: -14, frontLeg: 10, torsoTilt: 8, figureY: 4, figureScaleX: 1.04, figureScaleY: 0.95, aura: 0.14 };
   }
 
-  if (fighter.character.id === "akuma" && fighter.action?.move.kind === "projectile") {
-    pose.frontArm = -108;
-    pose.backArm = 62;
-    pose.torsoTilt = -16;
-    pose.headTilt = 8;
-    pose.aura = 0.38;
+  if (key === "heavy") {
+    return { backArm: -20, frontArm: 26, backLeg: -18, frontLeg: 18, torsoTilt: 16, headTilt: 4, figureY: 6, figureScaleX: 1.08, figureScaleY: 0.9, aura: 0.18, trailOpacity: 0.1 };
   }
 
-  if (fighter.character.id === "sakura" && fighter.action?.move.kind === "burst") {
-    pose.frontArm = -8;
-    pose.backArm = 98;
-    pose.frontLeg = -18;
-    pose.backLeg = 58;
-    pose.torsoTilt = -24;
-    pose.aura = 0.32;
+  if (move.kind === "projectile") {
+    return { backArm: -24, frontArm: 22, backLeg: -10, frontLeg: 12, torsoTilt: 12, headTilt: 2, figureY: 5, figureScaleX: 1.05, figureScaleY: 0.94, aura: 0.2, trailOpacity: 0.12 };
   }
 
-  if (fighter.character.id === "ken" && fighter.action?.key === "heavy") {
-    pose.frontArm = -118;
-    pose.backArm = 42;
-    pose.frontLeg = -52;
-    pose.backLeg = 26;
-    pose.torsoTilt = -18;
-    pose.aura = 0.3;
+  if (move.kind === "dash") {
+    return { backArm: -34, frontArm: 20, backLeg: -22, frontLeg: 20, torsoTilt: 18, headTilt: 4, figureY: 8, figureScaleX: 1.08, figureScaleY: 0.9, aura: 0.22, trailOpacity: 0.16, trailReach: 120 };
   }
 
-  if (fighter.character.id === "blanka" && fighter.action?.move.kind === "aura") {
-    pose.frontArm = -52;
-    pose.backArm = 62;
-    pose.frontLeg = -18;
-    pose.backLeg = 22;
-    pose.torsoTilt = 8;
-    pose.torsoY = 16;
-    pose.headTilt = 10;
-    pose.aura = 0.44;
+  if (move.kind === "burst") {
+    return { backArm: -18, frontArm: 16, backLeg: -16, frontLeg: 18, torsoTilt: 20, headTilt: 6, figureY: 9, figureScaleX: 1.1, figureScaleY: 0.88, aura: 0.24, trailOpacity: 0.18, trailReach: 126 };
   }
 
-  if (fighter.character.id === "dhalsim" && fighter.action?.key === "light") {
-    pose.frontArm = -136;
-    pose.backArm = 16;
-    pose.frontLeg = 4;
-    pose.backLeg = -2;
-    pose.torsoTilt = -10;
-    pose.aura = 0.18;
+  return getIdleRawPose(fighter, 0);
+}
+
+function getActionRawPose(fighter) {
+  if (!fighter.action) {
+    return getIdleRawPose(fighter, 0);
   }
 
-  if (fighter.character.id === "dhalsim" && fighter.action?.key === "heavy") {
-    pose.frontArm = -28;
-    pose.backArm = 10;
-    pose.frontLeg = -104;
-    pose.backLeg = 18;
-    pose.torsoTilt = -12;
-    pose.aura = 0.2;
+  const { key, move } = fighter.action;
+  let pose;
+
+  if (key === "light") {
+    pose = { frontArm: -90, backArm: 42, torsoTilt: -10, frontLeg: 20, backLeg: -2, figureY: -4, figureScaleX: 0.96, figureScaleY: 1.06, aura: 0.24, trailOpacity: 0.18, trailReach: 116, trailLift: 84 };
+  } else if (key === "heavy") {
+    pose = { frontLeg: -62, backLeg: 36, frontArm: -132, backArm: 52, torsoTilt: -20, headTilt: -4, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.1, aura: 0.34, trailOpacity: 0.54, trailReach: 162, trailLift: 116 };
+  } else if (move.kind === "projectile") {
+    pose = { frontArm: -112, backArm: 56, backLeg: 8, frontLeg: -8, torsoTilt: -16, figureY: -6, figureScaleX: 0.94, figureScaleY: 1.08, aura: 0.36, trailOpacity: 0.34, trailReach: 144, trailLift: 94 };
+  } else if (move.kind === "dash") {
+    pose = { frontArm: -54, backArm: 108, frontLeg: -82, backLeg: 34, torsoTilt: -30, headTilt: -6, figureY: -10, figureScaleX: 0.9, figureScaleY: 1.14, aura: 0.42, trailOpacity: 0.62, trailReach: 180, trailLift: 112 };
+  } else if (move.kind === "burst") {
+    pose = { frontArm: -24, backArm: 132, frontLeg: -40, backLeg: 76, torsoTilt: -32, headTilt: -8, figureY: -14, figureScaleX: 0.88, figureScaleY: 1.18, aura: 0.48, trailOpacity: 0.72, trailReach: 188, trailLift: 136 };
+  } else {
+    pose = getIdleRawPose(fighter, 0);
   }
 
-  if (fighter.character.id === "dhalsim" && fighter.action?.move.kind === "aura") {
-    pose.frontArm = -82;
-    pose.backArm = -14;
-    pose.frontLeg = 12;
-    pose.backLeg = 8;
-    pose.torsoTilt = -18;
-    pose.headTilt = -8;
-    pose.aura = 0.36;
+  if (fighter.character.id === "chunli" && key === "light") {
+    pose = { frontArm: -28, backArm: 48, frontLeg: -104, backLeg: 48, torsoTilt: -18, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.12, aura: 0.3, trailOpacity: 0.3, trailReach: 156, trailLift: 92 };
   }
 
-  if (fighter.character.id === "sagat" && fighter.action?.move.kind === "projectile") {
-    pose.frontArm = -112;
-    pose.backArm = 54;
-    pose.frontLeg = -8;
-    pose.backLeg = 14;
-    pose.torsoTilt = -6;
-    pose.aura = 0.28;
+  if (fighter.character.id === "vega" && move.kind === "dash") {
+    pose = { frontArm: -120, backArm: 54, frontLeg: -92, backLeg: 26, torsoTilt: -34, figureY: -10, figureScaleX: 0.88, figureScaleY: 1.16, aura: 0.46, trailOpacity: 0.66, trailReach: 194, trailLift: 118 };
   }
 
-  if (fighter.character.id === "sagat" && fighter.action?.move.kind === "burst") {
-    pose.frontArm = -4;
-    pose.backArm = 126;
-    pose.frontLeg = -24;
-    pose.backLeg = 68;
-    pose.torsoTilt = -14;
-    pose.aura = 0.34;
+  if (fighter.character.id === "akuma" && move.kind === "projectile") {
+    pose = { frontArm: -126, backArm: 78, torsoTilt: -24, headTilt: 10, figureY: -8, figureScaleX: 0.92, figureScaleY: 1.1, aura: 0.44, trailOpacity: 0.42, trailReach: 166, trailLift: 108 };
   }
 
-  if (fighter.character.id === "cammy" && fighter.action?.move.kind === "dash") {
-    pose.frontArm = -88;
-    pose.backArm = 38;
-    pose.frontLeg = -84;
-    pose.backLeg = 18;
-    pose.torsoTilt = -28;
-    pose.headTilt = -8;
-    pose.aura = 0.34;
+  if (fighter.character.id === "sakura" && move.kind === "burst") {
+    pose = { frontArm: -12, backArm: 116, frontLeg: -24, backLeg: 72, torsoTilt: -30, figureY: -12, figureScaleX: 0.9, figureScaleY: 1.16, aura: 0.42, trailOpacity: 0.68, trailReach: 184, trailLift: 128 };
   }
 
-  if (fighter.character.id === "cammy" && fighter.action?.move.kind === "burst") {
-    pose.frontArm = -18;
-    pose.backArm = 118;
-    pose.frontLeg = -22;
-    pose.backLeg = 62;
-    pose.torsoTilt = -22;
-    pose.aura = 0.36;
+  if (fighter.character.id === "ken" && key === "heavy") {
+    pose = { frontArm: -142, backArm: 56, frontLeg: -72, backLeg: 32, torsoTilt: -24, figureY: -8, figureScaleX: 0.9, figureScaleY: 1.12, aura: 0.38, trailOpacity: 0.6, trailReach: 174, trailLift: 120 };
   }
 
-  if (fighter.character.id === "rose" && fighter.action?.move.kind === "projectile") {
-    pose.frontArm = -108;
-    pose.backArm = 36;
-    pose.frontLeg = 4;
-    pose.backLeg = -2;
-    pose.torsoTilt = -14;
-    pose.headTilt = -4;
-    pose.aura = 0.34;
+  if (fighter.character.id === "blanka" && move.kind === "aura") {
+    pose = { frontArm: -72, backArm: 86, frontLeg: -26, backLeg: 28, torsoTilt: 12, torsoY: 18, headTilt: 12, figureY: -2, figureScaleX: 1.06, figureScaleY: 0.96, aura: 0.56, trailOpacity: 0.34, trailReach: 144, trailLift: 86 };
   }
 
-  if (fighter.character.id === "rose" && fighter.action?.move.kind === "dash") {
-    pose.frontArm = -52;
-    pose.backArm = 84;
-    pose.frontLeg = -48;
-    pose.backLeg = 24;
-    pose.torsoTilt = -20;
-    pose.aura = 0.36;
+  if (fighter.character.id === "dhalsim" && key === "light") {
+    pose = { frontArm: -158, backArm: 24, frontLeg: 8, backLeg: -6, torsoTilt: -14, figureY: -4, figureScaleX: 0.94, figureScaleY: 1.06, aura: 0.22, trailOpacity: 0.18, trailReach: 158, trailLift: 84 };
   }
 
-  if (fighter.character.id === "juri" && fighter.action?.key === "heavy") {
-    pose.frontArm = -24;
-    pose.backArm = 32;
-    pose.frontLeg = -88;
-    pose.backLeg = 38;
-    pose.torsoTilt = -24;
-    pose.headTilt = -6;
-    pose.aura = 0.28;
+  if (fighter.character.id === "dhalsim" && key === "heavy") {
+    pose = { frontArm: -38, backArm: 18, frontLeg: -132, backLeg: 22, torsoTilt: -18, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.26, trailOpacity: 0.34, trailReach: 176, trailLift: 112 };
   }
 
-  if (fighter.character.id === "juri" && fighter.action?.move.kind === "projectile") {
-    pose.frontArm = -14;
-    pose.backArm = 28;
-    pose.frontLeg = -76;
-    pose.backLeg = 40;
-    pose.torsoTilt = -22;
-    pose.headTilt = -8;
-    pose.aura = 0.34;
+  if (fighter.character.id === "dhalsim" && move.kind === "aura") {
+    pose = { frontArm: -108, backArm: -20, frontLeg: 18, backLeg: 10, torsoTilt: -24, headTilt: -10, figureY: -4, figureScaleX: 0.96, figureScaleY: 1.04, aura: 0.46, trailOpacity: 0.32, trailReach: 152, trailLift: 88 };
   }
 
-  if (fighter.character.id === "juri" && fighter.action?.move.kind === "dash") {
-    pose.frontArm = -42;
-    pose.backArm = 72;
-    pose.frontLeg = -96;
-    pose.backLeg = 30;
-    pose.torsoTilt = -30;
-    pose.headTilt = -10;
-    pose.aura = 0.4;
+  if (fighter.character.id === "sagat" && move.kind === "projectile") {
+    pose = { frontArm: -132, backArm: 68, frontLeg: -12, backLeg: 18, torsoTilt: -12, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.38, trailOpacity: 0.38, trailReach: 168, trailLift: 100 };
+  }
+
+  if (fighter.character.id === "sagat" && move.kind === "burst") {
+    pose = { frontArm: -6, backArm: 148, frontLeg: -36, backLeg: 84, torsoTilt: -24, figureY: -14, figureScaleX: 0.88, figureScaleY: 1.18, aura: 0.46, trailOpacity: 0.74, trailReach: 194, trailLift: 136 };
+  }
+
+  if (fighter.character.id === "cammy" && move.kind === "dash") {
+    pose = { frontArm: -108, backArm: 46, frontLeg: -112, backLeg: 24, torsoTilt: -36, headTilt: -10, figureY: -12, figureScaleX: 0.86, figureScaleY: 1.2, aura: 0.46, trailOpacity: 0.76, trailReach: 208, trailLift: 126 };
+  }
+
+  if (fighter.character.id === "cammy" && move.kind === "burst") {
+    pose = { frontArm: -22, backArm: 138, frontLeg: -30, backLeg: 76, torsoTilt: -28, figureY: -14, figureScaleX: 0.88, figureScaleY: 1.18, aura: 0.48, trailOpacity: 0.78, trailReach: 196, trailLift: 138 };
+  }
+
+  if (fighter.character.id === "rose" && move.kind === "projectile") {
+    pose = { frontArm: -128, backArm: 42, frontLeg: 8, backLeg: -4, torsoTilt: -20, headTilt: -6, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.42, trailOpacity: 0.42, trailReach: 172, trailLift: 104 };
+  }
+
+  if (fighter.character.id === "rose" && move.kind === "dash") {
+    pose = { frontArm: -66, backArm: 102, frontLeg: -68, backLeg: 28, torsoTilt: -28, figureY: -10, figureScaleX: 0.9, figureScaleY: 1.14, aura: 0.44, trailOpacity: 0.66, trailReach: 188, trailLift: 116 };
+  }
+
+  if (fighter.character.id === "juri" && key === "heavy") {
+    pose = { frontArm: -34, backArm: 40, frontLeg: -118, backLeg: 46, torsoTilt: -30, headTilt: -8, figureY: -8, figureScaleX: 0.88, figureScaleY: 1.14, aura: 0.36, trailOpacity: 0.5, trailReach: 182, trailLift: 114 };
+  }
+
+  if (fighter.character.id === "juri" && move.kind === "projectile") {
+    pose = { frontArm: -18, backArm: 38, frontLeg: -98, backLeg: 54, torsoTilt: -30, headTilt: -10, figureY: -8, figureScaleX: 0.9, figureScaleY: 1.12, aura: 0.42, trailOpacity: 0.44, trailReach: 174, trailLift: 110 };
+  }
+
+  if (fighter.character.id === "juri" && move.kind === "dash") {
+    pose = { frontArm: -56, backArm: 92, frontLeg: -128, backLeg: 36, torsoTilt: -40, headTilt: -12, figureY: -14, figureScaleX: 0.84, figureScaleY: 1.22, aura: 0.52, trailOpacity: 0.82, trailReach: 212, trailLift: 132 };
   }
 
   return pose;
 }
 
-function renderFighters(time) {
+function createFighterAnimation(fighter) {
+  return {
+    key: "",
+    pose: finalizePose(fighter, getIdleRawPose(fighter, 0)),
+    loop: null,
+    stateTween: null,
+    actionTimeline: null
+  };
+}
+
+function stopFighterAnimation(fighter) {
+  if (!fighter.animation || !GSAP) {
+    return;
+  }
+
+  fighter.animation.loop?.kill();
+  fighter.animation.stateTween?.kill();
+  fighter.animation.actionTimeline?.kill();
+  fighter.animation.loop = null;
+  fighter.animation.stateTween = null;
+  fighter.animation.actionTimeline = null;
+  GSAP.killTweensOf(fighter.animation.pose);
+}
+
+function setFighterAnimationPaused(fighter, paused) {
+  if (!fighter.animation) {
+    return;
+  }
+
+  [fighter.animation.loop, fighter.animation.stateTween, fighter.animation.actionTimeline].forEach((animation) => {
+    if (animation && typeof animation.paused === "function") {
+      animation.paused(paused);
+    }
+  });
+}
+
+function clearAllFighterAnimations() {
   state.fighters.forEach((fighter) => {
-    const pose = getPose(fighter, time);
+    stopFighterAnimation(fighter);
+  });
+}
+
+function tweenPose(fighter, rawPose, options = {}) {
+  if (!GSAP || !fighter.animation) {
+    return;
+  }
+
+  const target = finalizePose(fighter, rawPose);
+  fighter.animation.stateTween = GSAP.to(fighter.animation.pose, {
+    ...target,
+    duration: options.duration ?? 0.16,
+    ease: options.ease ?? "power2.out",
+    overwrite: true
+  });
+}
+
+function startPoseLoop(fighter, rawPoseA, rawPoseB, duration) {
+  if (!GSAP || !fighter.animation) {
+    return;
+  }
+
+  const poseA = finalizePose(fighter, rawPoseA);
+  const poseB = finalizePose(fighter, rawPoseB);
+  Object.assign(fighter.animation.pose, poseA);
+  fighter.animation.loop = GSAP.timeline({ repeat: -1, yoyo: true });
+  fighter.animation.loop.to(fighter.animation.pose, {
+    ...poseB,
+    duration,
+    ease: "sine.inOut",
+    overwrite: true
+  });
+}
+
+function playActionAnimation(fighter) {
+  if (!GSAP || !fighter.animation || !fighter.action) {
+    return;
+  }
+
+  const move = fighter.action.move;
+  const startup = Math.max(0.12, ((move.castTime || move.startup || 90) / 1000) * 0.7);
+  const active = Math.max(0.08, ((move.active || 60) / 1000) * 0.42);
+  const recovery = Math.max(0.18, ((move.recovery || 140) / 1000) * 0.58);
+  const anticPose = finalizePose(fighter, getActionAnticRawPose(fighter));
+  const actionPose = finalizePose(fighter, getActionRawPose(fighter));
+  const settlePose = finalizePose(fighter, fighter.y > 0 ? getStateRawPose(fighter, "jump") : getIdleRawPose(fighter, 0));
+
+  fighter.animation.actionTimeline = GSAP.timeline();
+  fighter.animation.actionTimeline
+    .to(fighter.animation.pose, {
+      ...anticPose,
+      duration: startup * 0.42,
+      ease: "power2.in",
+      overwrite: true
+    })
+    .to(fighter.animation.pose, {
+      ...actionPose,
+      duration: startup * 0.58,
+      ease: "power4.out",
+      overwrite: true
+    })
+    .to(fighter.animation.pose, {
+      ...actionPose,
+      duration: Math.min(active, 0.14),
+      ease: "none",
+      overwrite: true
+    })
+    .to(fighter.animation.pose, {
+      ...settlePose,
+      duration: recovery,
+      ease: "back.out(1.1)",
+      overwrite: true
+    });
+}
+
+function getAnimationKey(fighter) {
+  if (fighter.ko) {
+    return `ko:${fighter.reactionSerial}`;
+  }
+
+  if (fighter.action) {
+    return `action:${fighter.action.key}:${fighter.action.id}`;
+  }
+
+  if (fighter.hitstun > 0) {
+    return `${fighter.guardTimer > 0 ? "guard" : "hit"}:${fighter.reactionSerial}`;
+  }
+
+  if (fighter.state === "walk") {
+    return "walk";
+  }
+
+  if (fighter.state === "crouch") {
+    return "crouch";
+  }
+
+  if (fighter.state === "jump") {
+    return "jump";
+  }
+
+  if (fighter.state === "guard") {
+    return "guard:hold";
+  }
+
+  return "idle";
+}
+
+function syncFighterAnimation(fighter, immediate = false) {
+  if (!fighter.animation) {
+    fighter.animation = createFighterAnimation(fighter);
+  }
+
+  const key = getAnimationKey(fighter);
+  if (!immediate && fighter.animation.key === key) {
+    return;
+  }
+
+  fighter.animation.key = key;
+  stopFighterAnimation(fighter);
+
+  if (!GSAP) {
+    return;
+  }
+
+  if (fighter.action) {
+    Object.assign(fighter.animation.pose, finalizePose(fighter, getIdleRawPose(fighter, 0)));
+    playActionAnimation(fighter);
+    return;
+  }
+
+  if (fighter.ko) {
+    tweenPose(fighter, getStateRawPose(fighter, "ko"), { duration: immediate ? 0 : 0.24, ease: "power3.out" });
+    return;
+  }
+
+  if (fighter.hitstun > 0) {
+    tweenPose(fighter, getStateRawPose(fighter, fighter.guardTimer > 0 ? "guard" : "hit"), {
+      duration: immediate ? 0 : 0.1,
+      ease: "power2.out"
+    });
+    return;
+  }
+
+  if (fighter.state === "walk") {
+    startPoseLoop(fighter, getWalkRawPose(fighter, 0), getWalkRawPose(fighter, 1), 0.18);
+    return;
+  }
+
+  if (fighter.state === "crouch") {
+    tweenPose(fighter, getStateRawPose(fighter, "crouch"), { duration: immediate ? 0 : 0.12, ease: "power2.out" });
+    return;
+  }
+
+  if (fighter.state === "jump") {
+    tweenPose(fighter, getStateRawPose(fighter, "jump"), { duration: immediate ? 0 : 0.16, ease: "power2.out" });
+    return;
+  }
+
+  if (fighter.state === "guard") {
+    tweenPose(fighter, getStateRawPose(fighter, "guard"), { duration: immediate ? 0 : 0.12, ease: "power2.out" });
+    return;
+  }
+
+  startPoseLoop(fighter, getIdleRawPose(fighter, 0), getIdleRawPose(fighter, 1), 0.56);
+}
+
+function renderFighters() {
+  state.fighters.forEach((fighter) => {
+    const pose = fighter.animation?.pose || finalizePose(fighter, getIdleRawPose(fighter, 0));
     const profile = fighter.profile;
     const baseX = fighter.x;
     const baseY = STAGE.floorY - fighter.y;
     const fighterScale = BATTLE_TUNING.fighterScale;
     fighter.dom.root.setAttribute("transform", `translate(${baseX} ${baseY})`);
-    fighter.dom.figure.setAttribute("transform", `scale(${fighter.facing * fighterScale} ${fighterScale})`);
+    fighter.dom.figure.setAttribute(
+      "transform",
+      `translate(0 ${pose.figureY}) scale(${fighter.facing * fighterScale * pose.figureScaleX} ${fighterScale * pose.figureScaleY})`
+    );
     fighter.dom.root.classList.toggle("is-hit", fighter.flashTimer > 0);
     fighter.dom.root.classList.toggle("is-guard", fighter.guardTimer > 0);
     fighter.dom.root.classList.toggle("is-ko", fighter.ko);
@@ -2736,8 +2894,13 @@ function renderFighters(time) {
 
     fighter.dom.aura.setAttribute("fill", fighter.character.palette.aura);
     fighter.dom.aura.setAttribute("opacity", String(pose.aura));
-    fighter.dom.aura.setAttribute("transform", `translate(0 ${pose.torsoY * 0.6}) scale(${1 + pose.aura * 0.4} ${1 + pose.aura * 0.16})`);
+    fighter.dom.aura.setAttribute("transform", `translate(0 ${pose.torsoY * 0.6}) scale(${1 + pose.aura * 0.52} ${1 + pose.aura * 0.24})`);
     fighter.dom.trail.setAttribute("stroke-width", String(profile.trailWidth));
+    fighter.dom.trail.setAttribute(
+      "d",
+      `M ${-fighter.facing * 18} -84 Q ${-fighter.facing * (pose.trailReach * 0.68)} ${-pose.trailLift} ${-fighter.facing * pose.trailReach} -74`
+    );
+    fighter.dom.trail.setAttribute("opacity", String(pose.trailOpacity));
 
     fighter.dom.backLeg.setAttribute("transform", `translate(${-profile.hips} -54) rotate(${pose.backLeg}) scale(1 ${profile.legScale})`);
     fighter.dom.frontLeg.setAttribute("transform", `translate(${profile.hips} -54) rotate(${pose.frontLeg}) scale(1 ${profile.legScale})`);
@@ -2772,6 +2935,7 @@ function endMatch(winner, message) {
 
   resetInputState();
   state.phase = "over";
+  state.fighters.forEach((fighter) => setFighterAnimationPaused(fighter, true));
   state.projectiles = [];
   renderProjectiles();
   elements.battleOverlay.classList.remove("hidden");
@@ -2797,6 +2961,7 @@ function pauseMatch() {
 
   resetInputState();
   state.phase = "paused";
+  state.fighters.forEach((fighter) => setFighterAnimationPaused(fighter, true));
   state.announcerUntil = Number.POSITIVE_INFINITY;
   elements.announcerText.textContent = "已暂停 · 按空格继续";
 }
@@ -2809,6 +2974,7 @@ function resumeMatch() {
   resetInputState();
   state.phase = "fight";
   state.lastFrame = 0;
+  state.fighters.forEach((fighter) => setFighterAnimationPaused(fighter, false));
   setAnnouncer("格斗继续", 900);
 }
 
@@ -2860,16 +3026,18 @@ function gameLoop(timestamp) {
     if (p1 && p2) {
       updateFighterState(p1, p2, dt, dtMs);
       updateFighterState(p2, p1, dt, dtMs);
+      syncFighterAnimation(p1);
+      syncFighterAnimation(p2);
       solveSpacing();
       updateProjectiles(dt, dtMs);
       updateEffects(dtMs);
-      renderFighters(timestamp);
+      renderFighters();
       renderProjectiles();
       renderEffects();
       updateHud();
     }
   } else if (state.phase === "paused") {
-    renderFighters(timestamp);
+    renderFighters();
     renderProjectiles();
     renderEffects();
     updateHud();
@@ -2919,6 +3087,10 @@ function bindEvents() {
 }
 
 function init() {
+  if (!GSAP) {
+    throw new Error("GSAP 未加载，动作系统无法初始化。");
+  }
+
   renderRoster();
   renderSelectionPanels();
   bindEvents();

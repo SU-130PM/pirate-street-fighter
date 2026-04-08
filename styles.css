@@ -1,17 +1,17 @@
 :root {
-  --bg-top: #080b1a;
-  --bg-bottom: #1b274b;
-  --panel: rgba(12, 18, 34, 0.78);
-  --panel-strong: rgba(13, 16, 28, 0.9);
-  --stroke: rgba(255, 255, 255, 0.1);
-  --text: #f6f5f2;
-  --muted: #bdc7df;
-  --accent: #ff7a47;
-  --accent-soft: rgba(255, 122, 71, 0.22);
-  --accent-cold: #5fd0ff;
-  --good: #78ffa6;
-  --danger: #ff5d73;
-  --shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --bg-top: #07131f;
+  --bg-bottom: #2d1028;
+  --panel: rgba(7, 13, 28, 0.8);
+  --panel-strong: rgba(10, 12, 24, 0.92);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --text: #fff7ea;
+  --muted: #d4d4e6;
+  --accent: #ffb347;
+  --accent-soft: rgba(255, 179, 71, 0.24);
+  --accent-cold: #4fe8ff;
+  --good: #7fffb0;
+  --danger: #ff6077;
+  --shadow: 0 22px 62px rgba(0, 0, 0, 0.42);
 }
 
 * {
@@ -28,7 +28,9 @@ body {
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top, rgba(255, 147, 95, 0.18), transparent 34%),
+    radial-gradient(circle at 18% 0%, rgba(79, 232, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 8%, rgba(255, 174, 79, 0.2), transparent 32%),
+    radial-gradient(circle at 50% 100%, rgba(255, 83, 130, 0.14), transparent 40%),
     linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
   overflow-x: hidden;
 }
@@ -38,10 +40,10 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.04) 50%, transparent 100%),
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0 2px, transparent 2px 6px);
+    linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.06) 50%, transparent 100%),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 7px);
   mix-blend-mode: screen;
-  opacity: 0.65;
+  opacity: 0.56;
   pointer-events: none;
 }
 
@@ -52,7 +54,20 @@ body::before {
 }
 
 .hero {
-  padding: 16px 6px 24px;
+  position: relative;
+  padding: 20px 10px 28px;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 8px;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(79, 232, 255, 0.08), transparent 34%),
+    linear-gradient(315deg, rgba(255, 179, 71, 0.12), transparent 38%);
+  pointer-events: none;
 }
 
 .eyebrow,
@@ -71,7 +86,9 @@ body::before {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  text-shadow: 0 0 26px rgba(255, 120, 72, 0.38);
+  text-shadow:
+    0 0 24px rgba(255, 182, 73, 0.34),
+    0 0 44px rgba(79, 232, 255, 0.16);
 }
 
 .hero-copy {
@@ -86,7 +103,10 @@ body::before {
 .battle-screen {
   border: 1px solid var(--stroke);
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(8, 12, 26, 0.82), rgba(10, 12, 20, 0.92));
+  background:
+    radial-gradient(circle at top left, rgba(79, 232, 255, 0.08), transparent 24%),
+    radial-gradient(circle at top right, rgba(255, 178, 71, 0.1), transparent 28%),
+    linear-gradient(180deg, rgba(8, 12, 26, 0.84), rgba(10, 11, 20, 0.94));
   box-shadow: var(--shadow);
   overflow: hidden;
 }
@@ -151,16 +171,18 @@ body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.08), transparent 40%);
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.09), transparent 36%),
+    radial-gradient(circle at top, rgba(79, 232, 255, 0.08), transparent 42%);
   pointer-events: none;
 }
 
 .player-one {
-  box-shadow: inset 0 0 0 1px rgba(255, 134, 86, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 182, 73, 0.22);
 }
 
 .player-two {
-  box-shadow: inset 0 0 0 1px rgba(95, 208, 255, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(79, 232, 255, 0.24);
 }
 
 .player-badge {
@@ -185,7 +207,8 @@ body::before {
   margin: 14px 0;
   border-radius: 18px;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 54%),
+    radial-gradient(circle at 50% 18%, rgba(255, 179, 71, 0.16), transparent 34%),
+    radial-gradient(circle at 50% 90%, rgba(79, 232, 255, 0.08), transparent 42%),
     rgba(255, 255, 255, 0.03);
 }
 
@@ -247,7 +270,9 @@ body::before {
 .character-card:hover {
   transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(79, 232, 255, 0.08);
 }
 
 .character-card > * {
@@ -264,8 +289,9 @@ body::before {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
+    radial-gradient(circle at 50% 18%, rgba(255, 179, 71, 0.18), transparent 38%),
+    radial-gradient(circle at 50% 92%, rgba(79, 232, 255, 0.08), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
 }
 
 .card-header h3 {
@@ -284,7 +310,7 @@ body::before {
   margin-top: 10px;
   padding: 10px 12px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(255, 179, 71, 0.1), rgba(79, 232, 255, 0.08));
   color: #fff1c0;
   font-size: 0.86rem;
   line-height: 1.45;
@@ -299,7 +325,7 @@ body::before {
 .stat-pill {
   padding: 10px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
   text-align: center;
 }
 
@@ -326,7 +352,7 @@ body::before {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 0.82rem;
-  background: rgba(255, 255, 255, 0.07);
+  background: linear-gradient(135deg, rgba(79, 232, 255, 0.1), rgba(255, 179, 71, 0.08));
 }
 
 .assign-actions {
@@ -360,7 +386,7 @@ button {
 
 .primary-button {
   color: #1b120b;
-  background: linear-gradient(135deg, #ffdf82, #ff7d47);
+  background: linear-gradient(135deg, #ffe390, #ff9951 58%, #ff5f67);
 }
 
 .primary-button[disabled] {
@@ -372,7 +398,7 @@ button {
 .secondary-button,
 .assign-button {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
 }
 
 .assign-button {
@@ -397,10 +423,12 @@ button {
   padding: 12px 14px;
   margin-top: 0;
   transform: translateX(-50%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 999px;
-  background: rgba(8, 12, 26, 0.82);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.34);
+  background:
+    linear-gradient(135deg, rgba(79, 232, 255, 0.08), rgba(255, 179, 71, 0.08)),
+    rgba(8, 12, 26, 0.86);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(16px);
 }
 
@@ -422,7 +450,7 @@ button {
   grid-template-columns: 1fr auto 1fr;
   gap: 18px;
   align-items: end;
-  padding: 14px 16px 8px;
+  padding: 16px 16px 10px;
 }
 
 .fighter-hud {
@@ -438,7 +466,7 @@ button {
   display: inline-flex;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(79, 232, 255, 0.12), rgba(255, 179, 71, 0.1));
   font-size: 0.82rem;
   letter-spacing: 0.08em;
 }
@@ -454,7 +482,9 @@ button {
   border-radius: 999px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 10px 18px rgba(255, 255, 255, 0.04);
 }
 
 .bar span {
@@ -466,7 +496,7 @@ button {
 }
 
 .health-bar span {
-  background: linear-gradient(90deg, #6cff93, #f8ff7d);
+  background: linear-gradient(90deg, #65ff98, #ffd86d 72%, #ff8d5a);
 }
 
 .meter-bar {
@@ -474,7 +504,7 @@ button {
 }
 
 .meter-bar span {
-  background: linear-gradient(90deg, #62c7ff, #e568ff);
+  background: linear-gradient(90deg, #4fe8ff, #9d7cff 58%, #ff67d0);
 }
 
 .center-hud {
@@ -486,13 +516,14 @@ button {
   font-size: 2.4rem;
   line-height: 1;
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  text-shadow: 0 0 20px rgba(255, 225, 132, 0.26);
+  text-shadow: 0 0 20px rgba(255, 225, 132, 0.26), 0 0 34px rgba(79, 232, 255, 0.14);
 }
 
 .announcer {
   margin-top: 8px;
   color: #fff0be;
   font-size: 0.92rem;
+  letter-spacing: 0.04em;
 }
 
 .arena-shell {
@@ -500,8 +531,13 @@ button {
   margin: 0 14px 12px;
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(circle at top, rgba(255, 179, 71, 0.08), transparent 28%),
+    rgba(0, 0, 0, 0.32);
+  box-shadow:
+    inset 0 0 0 1px rgba(79, 232, 255, 0.06),
+    0 24px 54px rgba(0, 0, 0, 0.36);
 }
 
 #arenaSvg {
@@ -509,30 +545,48 @@ button {
   width: 100%;
   height: auto;
   aspect-ratio: 1200 / 520;
+  filter: saturate(1.12) contrast(1.08);
 }
 
 .city {
-  fill: rgba(10, 16, 30, 0.6);
+  fill: rgba(31, 54, 82, 0.58);
 }
 
 .city-front {
-  fill: rgba(9, 11, 24, 0.92);
+  fill: rgba(9, 18, 34, 0.92);
 }
 
 .neons rect {
-  fill: rgba(255, 141, 109, 0.22);
-  stroke: rgba(255, 203, 173, 0.46);
+  fill: rgba(255, 123, 88, 0.26);
+  stroke: rgba(255, 232, 188, 0.56);
   stroke-width: 2;
   filter: url(#glow);
 }
 
+.spotlights path {
+  fill: rgba(79, 232, 255, 0.08);
+}
+
+.billboards rect {
+  fill: rgba(10, 18, 36, 0.74);
+  stroke: rgba(255, 225, 162, 0.46);
+  stroke-width: 2;
+}
+
+.billboards path {
+  stroke: rgba(79, 232, 255, 0.6);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+}
+
 .crowd path {
-  fill: rgba(4, 7, 14, 0.94);
+  fill: rgba(5, 8, 16, 0.96);
 }
 
 .arena-floor path {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.09);
+  stroke: rgba(79, 232, 255, 0.14);
   stroke-width: 1.5;
 }
 
@@ -550,6 +604,9 @@ button {
   padding: 24px;
   text-align: center;
   box-shadow: var(--shadow);
+  background:
+    radial-gradient(circle at top, rgba(255, 179, 71, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(8, 13, 28, 0.92), rgba(10, 12, 20, 0.94));
 }
 
 .overlay-card h2 {
@@ -572,6 +629,9 @@ button {
 .controls-card {
   position: relative;
   padding: 14px 18px;
+  background:
+    linear-gradient(135deg, rgba(79, 232, 255, 0.08), rgba(255, 179, 71, 0.08)),
+    var(--panel);
 }
 
 .controls-card h3 {
@@ -588,13 +648,17 @@ button {
 }
 
 .fighter-shadow {
-  fill: rgba(6, 8, 18, 0.34);
+  fill: rgba(2, 6, 16, 0.5);
+  filter: blur(2px);
 }
 
 .fighter-nameplate text {
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
+  paint-order: stroke;
+  stroke: rgba(6, 10, 22, 0.75);
+  stroke-width: 4px;
 }
 
 .projectile-core,
@@ -606,20 +670,20 @@ button {
 }
 
 .fighter-outline {
-  stroke: rgba(255, 255, 255, 0.16);
-  stroke-width: 2.2;
+  stroke: rgba(255, 248, 226, 0.22);
+  stroke-width: 2.8;
 }
 
 .preview-base {
-  opacity: 0.92;
+  opacity: 0.96;
 }
 
 .is-hit .fighter-outline {
-  stroke: rgba(255, 231, 175, 0.7);
+  stroke: rgba(255, 236, 186, 0.92);
 }
 
 .is-guard .fighter-outline {
-  stroke: rgba(99, 224, 255, 0.8);
+  stroke: rgba(99, 224, 255, 0.96);
 }
 
 .is-ko .fighter-outline {
