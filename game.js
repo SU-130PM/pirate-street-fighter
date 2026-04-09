@@ -1154,6 +1154,376 @@ function createSvgElement(tag, attributes = {}) {
   return node;
 }
 
+function appendSvgSpec(parent, spec) {
+  const node = createSvgElement(spec.tag, spec.attrs);
+  if (spec.text) {
+    node.textContent = spec.text;
+  }
+  parent.appendChild(node);
+  return node;
+}
+
+function appendSvgSpecs(parent, specs) {
+  specs.forEach((spec) => appendSvgSpec(parent, spec));
+}
+
+function serializeSvgAttrs(attributes = {}) {
+  return Object.entries(attributes)
+    .map(([key, value]) => `${key}="${String(value).replace(/"/g, "&quot;")}"`)
+    .join(" ");
+}
+
+function createSvgMarkup(tag, attributes = {}, children = "") {
+  const attrs = serializeSvgAttrs(attributes);
+  return `<${tag}${attrs ? ` ${attrs}` : ""}>${children}</${tag}>`;
+}
+
+function parseHexColor(color) {
+  if (typeof color !== "string") {
+    return null;
+  }
+
+  const value = color.trim();
+  const short = /^#([0-9a-f]{3})$/i.exec(value);
+  if (short) {
+    return short[1].split("").map((channel) => Number.parseInt(channel + channel, 16));
+  }
+
+  const full = /^#([0-9a-f]{6})$/i.exec(value);
+  if (full) {
+    return [
+      Number.parseInt(full[1].slice(0, 2), 16),
+      Number.parseInt(full[1].slice(2, 4), 16),
+      Number.parseInt(full[1].slice(4, 6), 16)
+    ];
+  }
+
+  return null;
+}
+
+function mixColor(color, target, weight = 0.5) {
+  const sourceRgb = parseHexColor(color);
+  const targetRgb = parseHexColor(target);
+  if (!sourceRgb || !targetRgb) {
+    return color;
+  }
+
+  const ratio = clamp(weight, 0, 1);
+  const mixed = sourceRgb.map((channel, index) =>
+    Math.round(channel + (targetRgb[index] - channel) * ratio)
+      .toString(16)
+      .padStart(2, "0")
+  );
+  return `#${mixed.join("")}`;
+}
+
+function getModelPalette(character) {
+  const { palette, costume } = character;
+  return {
+    primaryLight: mixColor(palette.primary, "#ffffff", 0.24),
+    primaryShadow: mixColor(palette.primary, "#05070d", 0.34),
+    trimLight: mixColor(palette.trim, "#ffffff", 0.22),
+    trimShadow: mixColor(palette.trim, "#060b14", 0.28),
+    skinShade: mixColor(palette.skin, "#56372b", 0.28),
+    skinGlow: mixColor(palette.skin, "#fff0c8", 0.25),
+    darkSoft: mixColor(palette.dark, "#ffffff", 0.1),
+    darkDeep: mixColor(palette.dark, "#04060a", 0.28),
+    beltLight: mixColor(costume.belt, "#ffffff", 0.18),
+    beltShade: mixColor(costume.belt, "#05070d", 0.24),
+    secondarySoft: mixColor(palette.secondary, "#ffffff", 0.16),
+    secondaryDeep: mixColor(palette.secondary, "#06080d", 0.26)
+  };
+}
+
+const MODEL_SHAPES = {
+  arm: {
+    main: "M -12 0 C -16 14 -15 36 -9 58 Q -6 76 0 86 Q 6 76 9 58 C 15 36 16 14 12 0 Z",
+    shadow: "M -4 6 C -8 18 -8 38 -5 56 Q -2 72 2 80 Q 5 66 5 50 C 6 30 6 16 4 4 Z",
+    line: "M -2 8 C -4 26 -4 46 -1 66",
+    joint: "M -8 32 Q 0 26 8 32",
+    wrap: "M -11 54 Q 0 50 11 54 L 10 64 Q 0 60 -10 64 Z",
+    hand: "M -13 78 Q 0 72 13 78 Q 11 92 -5 92 Q -15 89 -13 78 Z",
+    knuckles: "M -6 82 Q 0 80 6 82"
+  },
+  leg: {
+    main: "M -14 0 C -18 18 -18 46 -12 80 Q -10 96 -2 108 Q 8 108 14 92 C 18 76 18 22 14 0 Z",
+    shadow: "M -4 8 C -8 26 -8 54 -4 84 Q -2 96 2 104 Q 5 88 6 68 C 6 42 6 18 4 6 Z",
+    line: "M -2 10 C -5 30 -4 56 -1 88",
+    knee: "M -13 44 Q 0 40 13 44 L 11 54 Q 0 50 -11 54 Z",
+    foot: "M -16 94 Q -2 88 16 94 L 24 106 Q 10 114 -14 110 Z",
+    sole: "M -6 104 Q 8 108 20 102"
+  },
+  torso: {
+    neck: "M -10 -132 Q 0 -124 10 -132 L 12 -112 Q 0 -102 -12 -112 Z",
+    shell: "M -34 -116 Q -22 -140 0 -144 Q 22 -140 34 -116 L 30 -82 Q 30 -52 20 -40 Q 8 -28 0 -30 Q -10 -28 -22 -40 Q -30 -52 -30 -82 Z",
+    yoke: "M -26 -114 Q 0 -132 26 -114 L 18 -92 Q 0 -104 -18 -92 Z",
+    abdomen: "M -20 -106 Q 0 -92 20 -106 L 18 -60 Q 0 -46 -18 -60 Z",
+    centerLine: "M 0 -118 L 0 -50",
+    collar: "M -18 -118 L 0 -88 L 18 -118",
+    waist: "M -30 -58 Q 0 -46 30 -58 L 28 -42 Q 0 -34 -28 -42 Z",
+    sashLeft: "M -8 -44 L -2 -12 L 4 -44 Z",
+    sashRight: "M 8 -44 L 14 -18 L 20 -44 Z"
+  },
+  head: {
+    face: "M -22 -148 Q -22 -172 0 -178 Q 22 -172 22 -148 Q 20 -130 0 -126 Q -20 -130 -22 -148 Z",
+    jawShadow: "M -12 -142 Q 0 -132 12 -142 Q 8 -128 0 -126 Q -8 -128 -12 -142 Z",
+    foreheadGlow: "M -12 -166 Q -1 -172 10 -164 Q 2 -158 -10 -160 Z",
+    brows: "M -10 -154 Q -4 -157 0 -154 Q 4 -157 10 -154",
+    eyeLeft: "M -10 -148 H -3",
+    eyeRight: "M 3 -148 H 10",
+    nose: "M 0 -149 Q 2 -144 0 -138",
+    mouth: "M -7 -135 Q 0 -132 7 -135"
+  }
+};
+
+function getArmShapeSpecs(character, tones) {
+  const { palette } = character;
+  return [
+    { tag: "path", attrs: { d: MODEL_SHAPES.arm.main, fill: palette.primary } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.arm.shadow, fill: tones.primaryShadow, opacity: 0.82 } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.arm.line,
+        fill: "none",
+        stroke: tones.primaryLight,
+        "stroke-width": 3,
+        "stroke-linecap": "round",
+        opacity: 0.74
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.arm.joint,
+        fill: "none",
+        stroke: tones.primaryShadow,
+        "stroke-width": 2.2,
+        "stroke-linecap": "round",
+        opacity: 0.58
+      }
+    },
+    { tag: "path", attrs: { d: MODEL_SHAPES.arm.wrap, fill: tones.secondaryDeep, opacity: 0.92 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.arm.hand, fill: palette.skin } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.arm.knuckles,
+        fill: "none",
+        stroke: tones.skinShade,
+        "stroke-width": 2.1,
+        "stroke-linecap": "round",
+        opacity: 0.68
+      }
+    }
+  ];
+}
+
+function getLegShapeSpecs(character, tones) {
+  const { palette } = character;
+  return [
+    { tag: "path", attrs: { d: MODEL_SHAPES.leg.main, fill: palette.trim } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.leg.shadow, fill: tones.trimShadow, opacity: 0.8 } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.leg.line,
+        fill: "none",
+        stroke: tones.trimLight,
+        "stroke-width": 3.1,
+        "stroke-linecap": "round",
+        opacity: 0.7
+      }
+    },
+    { tag: "path", attrs: { d: MODEL_SHAPES.leg.knee, fill: tones.secondaryDeep, opacity: 0.92 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.leg.foot, fill: tones.darkDeep } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.leg.sole,
+        fill: "none",
+        stroke: tones.darkSoft,
+        "stroke-width": 2.8,
+        "stroke-linecap": "round",
+        opacity: 0.85
+      }
+    }
+  ];
+}
+
+function getTorsoShapeSpecs(character, tones) {
+  const { palette, costume } = character;
+  return [
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.neck, fill: palette.skin } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.shell, fill: palette.primary } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.yoke, fill: tones.primaryLight, opacity: 0.44 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.abdomen, fill: tones.primaryShadow, opacity: 0.82 } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.torso.collar,
+        fill: "none",
+        stroke: tones.secondarySoft,
+        "stroke-width": 5,
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        opacity: 0.84
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.torso.centerLine,
+        fill: "none",
+        stroke: tones.primaryShadow,
+        "stroke-width": 3,
+        "stroke-linecap": "round",
+        opacity: 0.38
+      }
+    },
+    { tag: "path", attrs: { d: costume.emblem, fill: palette.secondary } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.waist, fill: costume.belt } },
+    {
+      tag: "path",
+      attrs: {
+        d: "M -24 -52 Q 0 -44 24 -52",
+        fill: "none",
+        stroke: tones.beltLight,
+        "stroke-width": 2.6,
+        "stroke-linecap": "round",
+        opacity: 0.76
+      }
+    },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.sashLeft, fill: tones.beltShade, opacity: 0.96 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.torso.sashRight, fill: tones.beltShade, opacity: 0.92 } }
+  ];
+}
+
+function getHeadShapeSpecs(character, tones) {
+  const { palette, costume } = character;
+  return [
+    { tag: "ellipse", attrs: { cx: -22, cy: -148, rx: 4, ry: 8, fill: tones.skinShade, opacity: 0.42 } },
+    { tag: "ellipse", attrs: { cx: 22, cy: -148, rx: 4, ry: 8, fill: tones.skinShade, opacity: 0.42 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.head.face, fill: palette.skin } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.head.jawShadow, fill: tones.skinShade, opacity: 0.42 } },
+    { tag: "path", attrs: { d: MODEL_SHAPES.head.foreheadGlow, fill: tones.skinGlow, opacity: 0.24 } },
+    { tag: "path", attrs: { d: costume.hair, fill: palette.dark } },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.head.brows,
+        fill: "none",
+        stroke: tones.darkDeep,
+        "stroke-width": 2.8,
+        "stroke-linecap": "round",
+        opacity: 0.72
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.head.eyeLeft,
+        fill: "none",
+        stroke: tones.darkDeep,
+        "stroke-width": 2.4,
+        "stroke-linecap": "round",
+        opacity: 0.84
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.head.eyeRight,
+        fill: "none",
+        stroke: tones.darkDeep,
+        "stroke-width": 2.4,
+        "stroke-linecap": "round",
+        opacity: 0.84
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.head.nose,
+        fill: "none",
+        stroke: tones.skinShade,
+        "stroke-width": 2.1,
+        "stroke-linecap": "round",
+        opacity: 0.74
+      }
+    },
+    {
+      tag: "path",
+      attrs: {
+        d: MODEL_SHAPES.head.mouth,
+        fill: "none",
+        stroke: tones.skinShade,
+        "stroke-width": 2.1,
+        "stroke-linecap": "round",
+        opacity: 0.8
+      }
+    }
+  ];
+}
+
+function getPreviewModelMarkup(character, profile) {
+  const tones = getModelPalette(character);
+  const outlineClass = "preview-outline";
+  const groupMarkup = (extraClass, transform, specs, opacity = 1) =>
+    createSvgMarkup(
+      "g",
+      {
+        class: `${outlineClass} ${extraClass}`,
+        transform,
+        opacity
+      },
+      specs.map((spec) => createSvgMarkup(spec.tag, spec.attrs)).join("")
+    );
+
+  return [
+    createSvgMarkup("path", {
+      d: "M -74 -52 Q 0 -126 74 -52",
+      fill: "none",
+      stroke: character.palette.aura,
+      "stroke-width": 8,
+      "stroke-linecap": "round",
+      opacity: 0.52
+    }),
+    groupMarkup(
+      "preview-back-leg",
+      `translate(${-profile.hips * 1.08} -48) rotate(9) scale(1 ${profile.legScale * 0.98})`,
+      getLegShapeSpecs(character, tones),
+      0.88
+    ),
+    groupMarkup(
+      "preview-back-arm",
+      `translate(${-profile.shoulder} -112) rotate(24) scale(1 ${profile.armScale * 0.98})`,
+      getArmShapeSpecs(character, tones),
+      0.9
+    ),
+    groupMarkup(
+      "preview-torso",
+      `translate(0 0) scale(${profile.torsoScaleX} ${profile.torsoScaleY})`,
+      getTorsoShapeSpecs(character, tones)
+    ),
+    groupMarkup(
+      "preview-front-leg",
+      `translate(${profile.hips * 1.08} -48) rotate(-8) scale(1 ${profile.legScale})`,
+      getLegShapeSpecs(character, tones)
+    ),
+    groupMarkup(
+      "preview-front-arm",
+      `translate(${profile.shoulder} -112) rotate(-24) scale(1 ${profile.armScale})`,
+      getArmShapeSpecs(character, tones)
+    ),
+    groupMarkup(
+      "preview-head",
+      `translate(0 ${profile.headOffset}) scale(${profile.headScale})`,
+      getHeadShapeSpecs(character, tones)
+    )
+  ].join("");
+}
+
 function getCharacter(id) {
   return roster.find((item) => item.id === id);
 }
@@ -1501,18 +1871,8 @@ function createPreviewMarkup(character) {
       </defs>
       <ellipse cx="0" cy="32" rx="64" ry="16" fill="rgba(0,0,0,0.25)"></ellipse>
       <g class="preview-base" filter="url(#previewGlow-${character.id})" transform="translate(0 ${profile.previewYOffset}) scale(${profile.previewScaleX} ${profile.previewScaleY})">
-        <path d="M -32 20 Q 0 -6 32 20 L 24 -72 H -24 Z" fill="${character.palette.primary}" opacity="0.8"></path>
-        <rect x="-18" y="-116" width="36" height="74" rx="12" fill="${character.palette.primary}" stroke="${character.palette.secondary}" stroke-width="3"></rect>
-        <path d="${character.costume.emblem}" fill="${character.palette.secondary}"></path>
-        <path d="${character.costume.hair}" fill="${character.palette.dark}"></path>
-        <circle cx="0" cy="-146" r="22" fill="${character.palette.skin}" stroke="${character.palette.secondary}" stroke-width="3"></circle>
-        <rect x="-46" y="-112" width="14" height="74" rx="7" fill="${character.palette.primary}" transform="rotate(18 -46 -112)"></rect>
-        <rect x="32" y="-112" width="14" height="74" rx="7" fill="${character.palette.primary}" transform="rotate(-18 32 -112)"></rect>
-        <rect x="-26" y="-42" width="16" height="86" rx="7" fill="${character.palette.trim}" transform="rotate(8 -26 -42)"></rect>
-        <rect x="10" y="-42" width="16" height="86" rx="7" fill="${character.palette.trim}" transform="rotate(-8 10 -42)"></rect>
-        <path d="M -20 -32 H 20" stroke="${character.costume.belt}" stroke-width="7" stroke-linecap="round"></path>
+        ${getPreviewModelMarkup(character, profile)}
         ${getPreviewAccessoryMarkup(character)}
-        <path d="M -72 -58 Q 0 -120 72 -58" fill="none" stroke="${character.palette.aura}" stroke-width="8" opacity="0.55"></path>
       </g>
     </svg>
   `;
@@ -1618,6 +1978,7 @@ function makeFighter(slot, character, x) {
 }
 
 function createFighterNode(fighter) {
+  const tones = getModelPalette(fighter.character);
   const root = createSvgElement("g", { id: `fighter-${fighter.slot}`, class: "fighter" });
   const shadow = createSvgElement("ellipse", { class: "fighter-shadow", cx: 0, cy: 0, rx: 48, ry: 14 });
   root.appendChild(shadow);
@@ -1634,9 +1995,9 @@ function createFighterNode(fighter) {
   });
 
   const body = createSvgElement("g", { class: "fighter-body" });
-  const backLeg = createSvgElement("g", { class: "fighter-outline limb back-leg" });
+  const backLeg = createSvgElement("g", { class: "fighter-outline limb back-leg", opacity: 0.9 });
   const frontLeg = createSvgElement("g", { class: "fighter-outline limb front-leg" });
-  const backArm = createSvgElement("g", { class: "fighter-outline limb back-arm" });
+  const backArm = createSvgElement("g", { class: "fighter-outline limb back-arm", opacity: 0.9 });
   const frontArm = createSvgElement("g", { class: "fighter-outline limb front-arm" });
   const torso = createSvgElement("g", { class: "fighter-outline torso" });
   const head = createSvgElement("g", { class: "fighter-outline head" });
@@ -1650,59 +2011,12 @@ function createFighterNode(fighter) {
     opacity: 0
   });
 
-  const makeLimb = (group, fill) => {
-    group.appendChild(createSvgElement("rect", { x: -7, y: 0, width: 14, height: 64, rx: 7, fill }));
-    group.appendChild(createSvgElement("circle", { cx: 0, cy: 66, r: 7, fill }));
-  };
-
-  makeLimb(backLeg, fighter.character.palette.trim);
-  makeLimb(frontLeg, fighter.character.palette.trim);
-  makeLimb(backArm, fighter.character.palette.primary);
-  makeLimb(frontArm, fighter.character.palette.primary);
-
-  torso.appendChild(
-    createSvgElement("path", {
-      d: "M -24 -116 Q -8 -132 0 -132 Q 8 -132 24 -116 L 20 -52 Q 2 -44 -20 -52 Z",
-      fill: fighter.character.palette.primary
-    })
-  );
-  torso.appendChild(
-    createSvgElement("path", {
-      d: fighter.character.costume.emblem,
-      fill: fighter.character.palette.secondary
-    })
-  );
-  torso.appendChild(
-    createSvgElement("path", {
-      d: "M -22 -56 H 22",
-      stroke: fighter.character.costume.belt,
-      "stroke-width": 8,
-      "stroke-linecap": "round"
-    })
-  );
-
-  head.appendChild(
-    createSvgElement("circle", {
-      cx: 0,
-      cy: -148,
-      r: 20,
-      fill: fighter.character.palette.skin
-    })
-  );
-  head.appendChild(
-    createSvgElement("path", {
-      d: fighter.character.costume.hair,
-      fill: fighter.character.palette.dark
-    })
-  );
-  head.appendChild(
-    createSvgElement("path", {
-      d: "M -8 -150 H 8",
-      stroke: fighter.character.palette.trim,
-      "stroke-width": 2,
-      opacity: 0.4
-    })
-  );
+  appendSvgSpecs(backLeg, getLegShapeSpecs(fighter.character, tones));
+  appendSvgSpecs(frontLeg, getLegShapeSpecs(fighter.character, tones));
+  appendSvgSpecs(backArm, getArmShapeSpecs(fighter.character, tones));
+  appendSvgSpecs(frontArm, getArmShapeSpecs(fighter.character, tones));
+  appendSvgSpecs(torso, getTorsoShapeSpecs(fighter.character, tones));
+  appendSvgSpecs(head, getHeadShapeSpecs(fighter.character, tones));
 
   decorateFighterParts(fighter, { body, torso, head, backArm, frontArm, backLeg, frontLeg });
 
@@ -1716,7 +2030,7 @@ function createFighterNode(fighter) {
     })
   ).textContent = fighter.character.name;
 
-  body.append(aura, backLeg, frontLeg, torso, backArm, frontArm, head, trail);
+  body.append(aura, backLeg, backArm, torso, frontLeg, frontArm, head, trail);
   figure.appendChild(body);
   root.append(figure, nameplate);
 
