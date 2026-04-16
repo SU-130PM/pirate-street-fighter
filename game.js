@@ -2809,17 +2809,19 @@ function finalizePose(fighter, rawPose = {}) {
 }
 
 function getIdleRawPose(fighter, variant = 0) {
-  const sway = 7 * fighter.profile.swayScale;
+  const sway = 5.2 * fighter.profile.swayScale;
   const direction = variant === 0 ? 1 : -1;
   return {
-    backArm: 10 + sway * direction,
-    frontArm: -10 - sway * 0.7 * direction,
-    backLeg: -10 + sway * 0.45 * direction,
-    frontLeg: 10 - sway * 0.45 * direction,
-    torsoY: fighter.profile.bounceScale * 1.4 * direction,
-    figureY: -2 + direction * 3,
-    figureScaleX: 1 + direction * 0.015,
-    figureScaleY: 1 - direction * 0.02,
+    backArm: 12 + sway * 0.72 * direction,
+    frontArm: -14 - sway * 0.52 * direction,
+    backLeg: 16 + sway * 0.28 * direction,
+    frontLeg: -18 - sway * 0.28 * direction,
+    torsoY: fighter.profile.bounceScale * 1.1 * direction,
+    torsoTilt: -2 * direction,
+    headTilt: direction,
+    figureY: -1 + direction * 2,
+    figureScaleX: 1 + direction * 0.01,
+    figureScaleY: 1 - direction * 0.012,
     aura: fighter.profile.auraBase + 0.02
   };
 }
@@ -3216,8 +3218,8 @@ function renderFighters() {
     );
     fighter.dom.trail.setAttribute("opacity", String(pose.trailOpacity));
 
-    fighter.dom.backLeg.setAttribute("transform", `translate(${-profile.hips} -54) rotate(${pose.backLeg}) scale(1 ${profile.legScale})`);
-    fighter.dom.frontLeg.setAttribute("transform", `translate(${profile.hips} -54) rotate(${pose.frontLeg}) scale(1 ${profile.legScale})`);
+    fighter.dom.backLeg.setAttribute("transform", `translate(${-profile.hips * 1.14} -58) rotate(${pose.backLeg}) scale(1 ${profile.legScale})`);
+    fighter.dom.frontLeg.setAttribute("transform", `translate(${profile.hips * 1.14} -58) rotate(${pose.frontLeg}) scale(1 ${profile.legScale})`);
     fighter.dom.backArm.setAttribute("transform", `translate(${-profile.shoulder} -114) rotate(${pose.backArm}) scale(1 ${profile.armScale})`);
     fighter.dom.frontArm.setAttribute("transform", `translate(${profile.shoulder} -114) rotate(${pose.frontArm}) scale(1 ${profile.armScale})`);
     fighter.dom.torso.setAttribute("transform", `translate(0 ${pose.torsoY}) rotate(${pose.torsoTilt}) scale(${profile.torsoScaleX} ${profile.torsoScaleY})`);
