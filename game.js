@@ -392,364 +392,368 @@ const roster = [
     }
   },
   {
-    id: "blanka",
-    name: "布兰卡",
-    title: "野性爆发与贴身放电怪兽",
-    intro: "靠抓挠和滚动贴脸，用滚雷放电把近身缠斗变成自己的节奏。",
-    trait: "野性型：贴身爆发很凶，放电守身，但中远距离最弱。",
-    stats: { health: 102, speed: 5.1, jump: 9.8, power: 8.8, defense: 8.2, meterGain: 1.02, airControl: 0.31, weight: 1.02, damageTaken: 1.01 },
+    id: "kyo",
+    name: "草薙京",
+    title: "草薙之炎与鬼烧反击并重的高校斗士",
+    intro: "用暗拂扫过地面压制空间，再以鬼烧和重拳切回属于自己的节奏。",
+    trait: "火焰连段型：中近距离压迫强，爆发稳，整体节奏接近街霸式攻防。",
+    stats: { health: 100, speed: 4.8, jump: 9.3, power: 8.9, defense: 8.5, meterGain: 1.02, airControl: 0.24, weight: 1, damageTaken: 1 },
     palette: {
-      primary: "#4ebc4a",
-      secondary: "#f69435",
-      trim: "#3a5c27",
-      aura: "#d6f54c",
-      skin: "#8bcf58",
-      dark: "#f57a28"
+      primary: "#f4f4f8",
+      secondary: "#f0bc45",
+      trim: "#1f2741",
+      aura: "#ff9c47",
+      skin: "#efc6a3",
+      dark: "#1a1c24"
     },
     costume: {
-      hair: "M -28 -146 L -18 -182 L -8 -154 L 0 -188 L 10 -154 L 20 -182 L 30 -146 L 18 -130 Q 2 -140 -24 -130 Z",
-      emblem: "M -12 -100 Q 0 -116 12 -100 Q 0 -82 -12 -100 Z",
-      belt: "#f69435"
+      hair: "M -20 -152 L -8 -178 L 2 -162 L 10 -180 L 22 -150 L 10 -136 Q -2 -142 -18 -136 Z",
+      emblem: "M -10 -102 L 0 -116 L 10 -102 L 2 -84 H -2 Z",
+      belt: "#f0bc45"
     },
     moves: {
-      light: { label: "野兽抓挠", damage: 4, reach: 90, height: 104, startup: 44, active: 108, recovery: 168, hits: 2, hitInterval: 48, push: 3.6, stun: 130 },
-      heavy: { label: "飞身压扑", damage: 10, reach: 118, height: 110, startup: 92, active: 120, recovery: 290, dash: 8.2, push: 10.2, stun: 330 },
+      light: { label: "外式·轰斧阳", damage: 6, reach: 84, height: 100, startup: 54, active: 92, recovery: 170, push: 4.9, stun: 220 },
+      heavy: { label: "七十五式·改", damage: 10, reach: 114, height: 116, startup: 100, active: 114, recovery: 302, dash: 6.9, push: 10.3, stun: 340 },
       skill1: {
-        label: "滚雷放电",
-        kind: "aura",
-        damage: 4,
-        meterCost: 24,
-        cooldown: 1360,
-        startup: 60,
-        active: 220,
-        recovery: 420,
-        auraRadius: 96,
-        auraHeight: 126,
-        hits: 4,
-        hitInterval: 52,
-        push: 3.1,
-        stun: 120
-      },
-      skill2: {
-        label: "滚动攻击",
-        kind: "dash",
-        damage: 7,
-        meterCost: 28,
-        cooldown: 1450,
-        startup: 74,
-        active: 176,
-        recovery: 430,
-        burstSpeed: 10.2,
-        burstLift: 3.8,
-        reach: 130,
-        height: 122,
-        hits: 2,
-        hitInterval: 80,
-        push: 11.2,
-        stun: 340
-      }
-    }
-  },
-  {
-    id: "dhalsim",
-    name: "达尔西姆",
-    title: "长手长脚与火焰压制的瑜伽大师",
-    intro: "用超长拳脚控制距离，再用瑜伽火与瑜伽火焰封锁接近路线。",
-    trait: "牵制型：普攻距离最远，火焰压制最稳，但体格最薄最慢。",
-    stats: { health: 92, speed: 3.8, jump: 8.9, power: 8.1, defense: 7.8, meterGain: 1.06, airControl: 0.18, weight: 0.84, damageTaken: 1.08 },
-    palette: {
-      primary: "#c68f4c",
-      secondary: "#ffb95d",
-      trim: "#a74e1f",
-      aura: "#ff8f4f",
-      skin: "#dba56b",
-      dark: "#4b2c1c"
-    },
-    costume: {
-      hair: "M -6 -160 Q 0 -176 6 -160 L 8 -142 H -8 Z",
-      emblem: "M -12 -102 H 12 L 0 -82 Z",
-      belt: "#9c3422"
-    },
-    moves: {
-      light: { label: "伸缩直拳", damage: 5, reach: 138, height: 102, startup: 62, active: 90, recovery: 190, push: 4.2, stun: 180 },
-      heavy: { label: "长脚鞭踢", damage: 9, reach: 172, height: 118, startup: 126, active: 120, recovery: 260, dash: 1.2, push: 7.6, stun: 240 },
-      skill1: {
-        label: "瑜伽火",
+        label: "百八式·暗拂",
         kind: "projectile",
         damage: 10,
         meterCost: 18,
-        cooldown: 920,
-        castTime: 160,
-        recovery: 390,
-        projectileSpeed: 6.6,
-        projectileRadius: 18,
-        projectileHeight: 120,
+        cooldown: 840,
+        castTime: 142,
+        recovery: 350,
+        projectileSpeed: 8.4,
+        projectileRadius: 20,
+        projectileHeight: 108,
         projectileShape: "ember",
-        projectileWaveAmp: 0.4,
-        projectileWaveSpeed: 0.1,
-        projectileLife: 2500,
-        push: 7.2,
-        stun: 280
-      },
-      skill2: {
-        label: "瑜伽火焰",
-        kind: "aura",
-        damage: 6,
-        meterCost: 26,
-        cooldown: 1500,
-        startup: 92,
-        active: 180,
-        recovery: 460,
-        auraRadius: 116,
-        auraHeight: 122,
-        frontOnly: true,
-        hits: 2,
-        hitInterval: 96,
-        push: 6.5,
-        stun: 260
-      }
-    }
-  },
-  {
-    id: "sagat",
-    name: "萨格特",
-    title: "重炮牵制与高压升龙的泰拳帝王",
-    intro: "虎炮封路、虎膝切入，再以猛虎升龙破惩罚一切冒进。",
-    trait: "重炮型：体型最重、牵制火力很强，但机动偏慢，近身容错已明显下调。",
-    stats: { health: 106, speed: 3.85, jump: 7.7, power: 9.1, defense: 8.3, meterGain: 0.82, airControl: 0.16, weight: 1.18, damageTaken: 0.99 },
-    palette: {
-      primary: "#c7ac68",
-      secondary: "#f7e1a8",
-      trim: "#7d2c16",
-      aura: "#ffd15f",
-      skin: "#c99866",
-      dark: "#25222d"
-    },
-    costume: {
-      hair: "M -16 -154 H 16 L 12 -138 H -12 Z",
-      emblem: "M -10 -100 H 10 L 4 -84 H -4 Z",
-      belt: "#7d2c16"
-    },
-    moves: {
-      light: { label: "泰拳刺拳", damage: 6, reach: 88, height: 104, startup: 62, active: 88, recovery: 184, push: 4.8, stun: 190 },
-      heavy: { label: "虎膝", damage: 9, reach: 112, height: 108, startup: 104, active: 108, recovery: 350, dash: 7.4, push: 9.4, stun: 300 },
-      skill1: {
-        label: "虎炮",
-        kind: "projectile",
-        damage: 10,
-        meterCost: 22,
-        cooldown: 1080,
-        castTime: 162,
-        recovery: 460,
-        projectileSpeed: 9.6,
-        projectileRadius: 22,
-        projectileHeight: 124,
-        projectileShape: "tiger",
-        projectileWaveAmp: 0.2,
+        projectileWaveAmp: 0.24,
         projectileWaveSpeed: 0.08,
-        projectileLife: 2000,
-        push: 7.8,
+        projectileLife: 1900,
+        push: 7.1,
         stun: 290
       },
       skill2: {
-        label: "猛虎升龙破",
+        label: "百式·鬼烧",
         kind: "burst",
-        damage: 14,
-        meterCost: 32,
-        cooldown: 1820,
-        startup: 92,
-        active: 128,
-        recovery: 520,
-        burstSpeed: 4.4,
-        burstLift: 9.8,
-        reach: 90,
-        height: 154,
-        push: 10.8,
-        stun: 360
+        damage: 8,
+        meterCost: 28,
+        cooldown: 1440,
+        startup: 70,
+        active: 136,
+        recovery: 430,
+        burstSpeed: 5,
+        burstLift: 10.8,
+        reach: 88,
+        height: 156,
+        hits: 2,
+        hitInterval: 72,
+        push: 12,
+        stun: 420
       }
     }
   },
   {
-    id: "cammy",
-    name: "卡米",
-    title: "高速突进与精准反打的特种斗士",
-    intro: "靠螺旋箭撕开防线，再用加农尖峰完成高速斩切式反击。",
-    trait: "突袭型：冲刺和反打最狠，移动最灵，但血量和容错偏低。",
-    stats: { health: 94, speed: 5.45, jump: 10.1, power: 8.4, defense: 7.9, meterGain: 1.08, airControl: 0.36, weight: 0.86, damageTaken: 1.05 },
+    id: "iori",
+    name: "八神庵",
+    title: "紫炎暗拂与琴月冲杀的狂气斗士",
+    intro: "依靠暗拂逼对手站位，再用琴月阴和重击强行把压迫带进贴身距离。",
+    trait: "狂攻型：爆发高、逼退强，节奏最凶，但承伤也偏高。",
+    stats: { health: 96, speed: 5, jump: 9.6, power: 9.4, defense: 7.9, meterGain: 1.08, airControl: 0.28, weight: 0.94, damageTaken: 1.05 },
     palette: {
-      primary: "#4b8d58",
-      secondary: "#d3434f",
-      trim: "#1f314a",
-      aura: "#8fd6ff",
-      skin: "#efc7a2",
-      dark: "#e0c56a"
+      primary: "#2e2437",
+      secondary: "#c74958",
+      trim: "#7b4ad8",
+      aura: "#b95aff",
+      skin: "#efc4a2",
+      dark: "#16131f"
     },
     costume: {
-      hair: "M -8 -152 Q -24 -178 -4 -162 L 6 -166 Q 28 -180 12 -152 L 8 -136 Q 0 -140 -8 -136 Z",
-      emblem: "M -14 -100 H 14 L 0 -84 Z",
-      belt: "#1f314a"
+      hair: "M -20 -152 L -8 -182 L 0 -160 L 10 -184 L 22 -152 L 10 -134 Q -4 -142 -18 -134 Z",
+      emblem: "M -14 -100 H 14 L 0 -82 Z",
+      belt: "#c74958"
     },
     moves: {
-      light: { label: "迅斩刺拳", damage: 4, reach: 82, height: 96, startup: 44, active: 98, recovery: 160, hits: 2, hitInterval: 42, push: 3.5, stun: 130 },
-      heavy: { label: "旋棘踢", damage: 9, reach: 106, height: 112, startup: 90, active: 112, recovery: 260, dash: 6.8, push: 9, stun: 300 },
+      light: { label: "外式·梦弹", damage: 6, reach: 86, height: 98, startup: 48, active: 94, recovery: 168, push: 5.1, stun: 220 },
+      heavy: { label: "外式·百合折", damage: 10, reach: 108, height: 124, startup: 88, active: 110, recovery: 278, dash: 6.2, push: 9.5, stun: 320 },
       skill1: {
-        label: "螺旋箭",
-        kind: "dash",
-        damage: 6,
-        meterCost: 22,
-        cooldown: 1160,
-        startup: 62,
-        active: 168,
-        recovery: 370,
-        burstSpeed: 10.4,
-        burstLift: 2.8,
-        reach: 132,
-        height: 110,
-        hits: 2,
-        hitInterval: 70,
-        push: 10.5,
-        stun: 320
+        label: "百八式·暗拂",
+        kind: "projectile",
+        damage: 10,
+        meterCost: 18,
+        cooldown: 820,
+        castTime: 136,
+        recovery: 338,
+        projectileSpeed: 9.2,
+        projectileRadius: 20,
+        projectileHeight: 114,
+        projectileShape: "dark",
+        projectileWaveAmp: 1.4,
+        projectileWaveSpeed: 0.18,
+        projectileLife: 2050,
+        push: 7.5,
+        stun: 300
       },
       skill2: {
-        label: "加农尖峰",
-        kind: "burst",
+        label: "琴月阴",
+        kind: "dash",
         damage: 7,
         meterCost: 28,
         cooldown: 1420,
         startup: 72,
-        active: 132,
-        recovery: 410,
-        burstSpeed: 5.2,
-        burstLift: 10.6,
-        reach: 88,
-        height: 158,
+        active: 166,
+        recovery: 420,
+        burstSpeed: 8.8,
+        burstLift: 3.4,
+        reach: 126,
+        height: 122,
         hits: 2,
-        hitInterval: 72,
-        push: 11.8,
-        stun: 400
+        hitInterval: 82,
+        push: 11.2,
+        stun: 360
       }
     }
   },
   {
-    id: "rose",
-    name: "罗丝",
-    title: "灵魂术与围巾步法并重的神秘占卜师",
-    intro: "以灵魂火花稳控中距离，再用灵魂螺旋切入，靠围巾节奏反压对手。",
-    trait: "术式型：牵制稳定、节奏均衡，攻防转换很顺，但爆发不算顶尖。",
-    stats: { health: 98, speed: 4.55, jump: 8.9, power: 8.3, defense: 8.6, meterGain: 1.04, airControl: 0.27, weight: 0.95, damageTaken: 1 },
+    id: "terry",
+    name: "特瑞·博加德",
+    title: "能量波与燃烧指节兼备的街头冠军",
+    intro: "用能量波铺路，再靠燃烧指节和重脚强行撞开正面的防线。",
+    trait: "街斗型：体格厚、招式直来直往，适合拳皇与街霸混合节奏。",
+    stats: { health: 104, speed: 4.6, jump: 8.9, power: 9, defense: 8.8, meterGain: 0.96, airControl: 0.22, weight: 1.06, damageTaken: 0.97 },
     palette: {
-      primary: "#7b53bf",
-      secondary: "#f1c85a",
-      trim: "#2c4f7d",
-      aura: "#7ec9ff",
-      skin: "#efc9ab",
-      dark: "#44285c"
+      primary: "#c83534",
+      secondary: "#f6e2a2",
+      trim: "#27478b",
+      aura: "#ffd46b",
+      skin: "#efc7a4",
+      dark: "#bead4a"
     },
     costume: {
-      hair: "M -18 -154 Q -8 -172 10 -166 L 20 -148 Q 4 -144 -14 -138 Z",
-      emblem: "M -16 -102 Q 0 -118 16 -102 Q 0 -82 -16 -102 Z",
-      belt: "#f1c85a"
+      hair: "M -18 -146 Q -8 -162 10 -160 L 20 -148 Q 8 -142 -10 -138 Z",
+      emblem: "M -14 -102 H 14 L 0 -84 Z",
+      belt: "#27478b"
     },
     moves: {
-      light: { label: "围巾刺掌", damage: 5, reach: 94, height: 102, startup: 54, active: 92, recovery: 176, push: 4.6, stun: 190 },
-      heavy: { label: "滑步鞭踢", damage: 9, reach: 116, height: 110, startup: 98, active: 112, recovery: 292, dash: 6.5, push: 9, stun: 300 },
+      light: { label: "碎石直拳", damage: 6, reach: 88, height: 102, startup: 58, active: 90, recovery: 176, push: 4.9, stun: 210 },
+      heavy: { label: "强力扣篮", damage: 10, reach: 114, height: 114, startup: 102, active: 112, recovery: 314, dash: 6.6, push: 10.1, stun: 330 },
       skill1: {
-        label: "灵魂火花",
+        label: "能量波",
         kind: "projectile",
         damage: 10,
         meterCost: 18,
-        cooldown: 880,
-        castTime: 148,
+        cooldown: 900,
+        castTime: 150,
         recovery: 360,
-        projectileSpeed: 8.2,
+        projectileSpeed: 8.6,
         projectileRadius: 22,
-        projectileHeight: 120,
-        projectileShape: "soul",
-        projectileWaveAmp: 0.7,
-        projectileWaveSpeed: 0.12,
-        projectileLife: 2150,
-        push: 7.3,
-        stun: 300
+        projectileHeight: 110,
+        projectileShape: "disc",
+        projectileWaveAmp: 0.4,
+        projectileWaveSpeed: 0.08,
+        projectileLife: 2000,
+        push: 7.2,
+        stun: 285
       },
       skill2: {
-        label: "灵魂螺旋",
+        label: "燃烧指节",
         kind: "dash",
-        damage: 5,
-        meterCost: 26,
-        cooldown: 1460,
-        startup: 76,
-        active: 164,
+        damage: 7,
+        meterCost: 28,
+        cooldown: 1480,
+        startup: 78,
+        active: 174,
         recovery: 420,
-        burstSpeed: 8.1,
-        burstLift: 2.2,
-        reach: 122,
-        height: 122,
+        burstSpeed: 9.1,
+        burstLift: 3.2,
+        reach: 130,
+        height: 120,
         hits: 2,
-        hitInterval: 74,
-        push: 10.3,
-        stun: 340
+        hitInterval: 84,
+        push: 11.5,
+        stun: 350
       }
     }
   },
   {
-    id: "juri",
-    name: "朱莉·韩",
-    title: "邪锋踢技与风破压迫并存的危险斗士",
-    intro: "靠风破刃打乱节奏，再用穿风车高速切入，空中与近身压迫都很强。",
-    trait: "邪锋型：移动和起跳都极快，压制凶狠，但防御与容错偏低。",
-    stats: { health: 92, speed: 5.6, jump: 10.3, power: 8.5, defense: 7.6, meterGain: 1.12, airControl: 0.4, weight: 0.86, damageTaken: 1.07 },
+    id: "mai",
+    name: "不知火舞",
+    title: "花蝶扇与忍蜂突袭结合的炎舞忍者",
+    intro: "用花蝶扇远程扰动节奏，再靠忍蜂切入，以高速位移折磨对手的防线。",
+    trait: "灵舞型：最飘逸的远近切换手，机动优秀，但容错偏低。",
+    stats: { health: 94, speed: 5.4, jump: 10.2, power: 7.9, defense: 7.8, meterGain: 1.12, airControl: 0.38, weight: 0.86, damageTaken: 1.06 },
     palette: {
-      primary: "#2d2337",
-      secondary: "#d24b90",
-      trim: "#6f3cd1",
-      aura: "#c96bff",
-      skin: "#efc3a2",
-      dark: "#16121f"
+      primary: "#d43c47",
+      secondary: "#fff0b3",
+      trim: "#f2f4f8",
+      aura: "#ff8cb5",
+      skin: "#efc8a5",
+      dark: "#4d241c"
     },
     costume: {
-      hair: "M -22 -154 Q -12 -184 -2 -156 L 6 -176 L 14 -156 Q 24 -184 28 -154 L 20 -136 Q 4 -144 -20 -136 Z",
-      emblem: "M -14 -102 L 0 -118 L 14 -102 L 0 -86 Z",
-      belt: "#d24b90"
+      hair: "M -20 -150 Q -8 -168 10 -164 L 22 -148 Q 8 -142 -18 -138 Z",
+      emblem: "M -12 -100 L 0 -114 L 12 -100 L 0 -86 Z",
+      belt: "#f2f4f8"
     },
     moves: {
-      light: { label: "邪眼连踢", damage: 4, reach: 84, height: 100, startup: 42, active: 100, recovery: 160, hits: 2, hitInterval: 42, push: 3.5, stun: 128 },
-      heavy: { label: "回身斧踢", damage: 9, reach: 108, height: 122, startup: 88, active: 116, recovery: 268, dash: 6.9, push: 9.1, stun: 300 },
+      light: { label: "舞扇掌", damage: 5, reach: 84, height: 98, startup: 46, active: 96, recovery: 164, hits: 2, hitInterval: 48, push: 3.8, stun: 150 },
+      heavy: { label: "龙炎舞", damage: 9, reach: 110, height: 112, startup: 92, active: 114, recovery: 274, dash: 5.8, push: 9.1, stun: 310 },
       skill1: {
-        label: "风破刃",
+        label: "花蝶扇",
         kind: "projectile",
         damage: 9,
-        meterCost: 18,
-        cooldown: 800,
-        castTime: 132,
-        recovery: 330,
-        projectileSpeed: 9.4,
-        projectileRadius: 20,
-        projectileHeight: 110,
-        projectileShape: "fang",
-        projectileWaveAmp: 1.2,
-        projectileWaveSpeed: 0.16,
-        projectileLife: 1900,
-        guardDamageRatio: 0.48,
+        meterCost: 16,
+        cooldown: 780,
+        castTime: 130,
+        recovery: 324,
+        projectileSpeed: 9.1,
+        projectileRadius: 18,
+        projectileHeight: 114,
+        projectileShape: "petal",
+        projectileWaveAmp: 1,
+        projectileWaveSpeed: 0.14,
+        projectileLife: 1850,
         push: 6.8,
         stun: 270
       },
       skill2: {
-        label: "穿风车",
+        label: "必杀忍蜂",
         kind: "dash",
         damage: 6,
         meterCost: 28,
-        cooldown: 1360,
+        cooldown: 1380,
         startup: 66,
-        active: 178,
-        recovery: 392,
-        burstSpeed: 9.5,
+        active: 176,
+        recovery: 398,
+        burstSpeed: 9.6,
         burstLift: 3.2,
         reach: 128,
-        height: 126,
+        height: 124,
         hits: 3,
-        hitInterval: 56,
-        push: 11.4,
+        hitInterval: 58,
+        push: 11.2,
         stun: 360
+      }
+    }
+  },
+  {
+    id: "leona",
+    name: "莉安娜",
+    title: "军刀切割与X口径炮并行的冷刃战士",
+    intro: "用短促军刀技打断对手，再以 X 口径炮和旋转火花完成纪律化爆发。",
+    trait: "特战型：攻守切换干脆，反打硬，整体手感偏冷静精准。",
+    stats: { health: 100, speed: 4.9, jump: 9.4, power: 8.7, defense: 8.7, meterGain: 1, airControl: 0.26, weight: 0.98, damageTaken: 0.99 },
+    palette: {
+      primary: "#2d4f82",
+      secondary: "#d9e9f8",
+      trim: "#5bc6d4",
+      aura: "#8fdcff",
+      skin: "#efc9ac",
+      dark: "#3d7868"
+    },
+    costume: {
+      hair: "M -18 -154 L -6 -182 L 4 -160 L 10 -178 L 18 -152 L 8 -136 Q -2 -142 -16 -136 Z",
+      emblem: "M -14 -100 H 14 L 0 -84 Z",
+      belt: "#d9e9f8"
+    },
+    moves: {
+      light: { label: "军刀直斩", damage: 6, reach: 84, height: 100, startup: 52, active: 92, recovery: 168, push: 4.8, stun: 210 },
+      heavy: { label: "月光锯", damage: 9, reach: 108, height: 126, startup: 88, active: 112, recovery: 282, dash: 5.8, push: 9.2, stun: 320 },
+      skill1: {
+        label: "X口径炮",
+        kind: "projectile",
+        damage: 10,
+        meterCost: 18,
+        cooldown: 900,
+        castTime: 142,
+        recovery: 350,
+        projectileSpeed: 8.8,
+        projectileRadius: 18,
+        projectileHeight: 124,
+        projectileShape: "fang",
+        projectileWaveAmp: 0.5,
+        projectileWaveSpeed: 0.1,
+        projectileLife: 1900,
+        push: 7,
+        stun: 300
+      },
+      skill2: {
+        label: "旋转火花",
+        kind: "burst",
+        damage: 7,
+        meterCost: 28,
+        cooldown: 1440,
+        startup: 72,
+        active: 134,
+        recovery: 430,
+        burstSpeed: 5.1,
+        burstLift: 10.2,
+        reach: 86,
+        height: 156,
+        hits: 2,
+        hitInterval: 78,
+        push: 11.6,
+        stun: 410
+      }
+    }
+  },
+  {
+    id: "athena",
+    name: "麻宫雅典娜",
+    title: "精神球与凤凰箭并用的偶像超能力者",
+    intro: "精神球稳住中距离，凤凰箭切入空中线，打起来更像灵巧版的街霸波升体系。",
+    trait: "超能型：回气快、远程稳定、空中机动灵活，但硬碰硬偏吃亏。",
+    stats: { health: 95, speed: 5.1, jump: 9.8, power: 8, defense: 8, meterGain: 1.14, airControl: 0.35, weight: 0.9, damageTaken: 1.03 },
+    palette: {
+      primary: "#f4f2ff",
+      secondary: "#f17bb8",
+      trim: "#4f5fd2",
+      aura: "#8fd3ff",
+      skin: "#f0cbab",
+      dark: "#4a2d64"
+    },
+    costume: {
+      hair: "M -18 -150 Q -4 -170 12 -164 L 22 -146 Q 10 -142 -16 -138 Z",
+      emblem: "M -14 -100 H 14 L 0 -84 Z",
+      belt: "#4f5fd2"
+    },
+    moves: {
+      light: { label: "精神掌", damage: 5, reach: 84, height: 98, startup: 48, active: 92, recovery: 164, push: 4.1, stun: 180 },
+      heavy: { label: "连环回旋踢", damage: 9, reach: 108, height: 116, startup: 92, active: 112, recovery: 274, dash: 5.4, push: 8.8, stun: 300 },
+      skill1: {
+        label: "精神球",
+        kind: "projectile",
+        damage: 9,
+        meterCost: 18,
+        cooldown: 820,
+        castTime: 136,
+        recovery: 330,
+        projectileSpeed: 8.6,
+        projectileRadius: 20,
+        projectileHeight: 116,
+        projectileShape: "soul",
+        projectileWaveAmp: 0.9,
+        projectileWaveSpeed: 0.14,
+        projectileLife: 2100,
+        push: 6.9,
+        stun: 280
+      },
+      skill2: {
+        label: "凤凰箭",
+        kind: "burst",
+        damage: 7,
+        meterCost: 28,
+        cooldown: 1360,
+        startup: 74,
+        active: 134,
+        recovery: 404,
+        burstSpeed: 5.1,
+        burstLift: 10.4,
+        reach: 86,
+        height: 154,
+        hits: 2,
+        hitInterval: 74,
+        push: 11.1,
+        stun: 390
       }
     }
   }
@@ -912,160 +916,160 @@ const styleProfiles = {
     shadowScale: 0.94,
     trailWidth: 8
   },
-  blanka: {
-    shoulder: 30,
-    hips: 20,
-    armScale: 1.04,
-    legScale: 1.1,
-    torsoScaleX: 1.08,
-    torsoScaleY: 0.96,
-    headScale: 1.08,
+  kyo: {
+    shoulder: 29,
+    hips: 18,
+    armScale: 1.02,
+    legScale: 1.01,
+    torsoScaleX: 1,
+    torsoScaleY: 1.02,
+    headScale: 1,
     headOffset: 0,
     nameY: -196,
-    previewScaleX: 1.05,
-    previewScaleY: 1.02,
-    previewYOffset: 2,
-    auraBase: 0.18,
-    swayScale: 1.35,
-    walkScale: 1.15,
-    frontArmBias: -8,
-    backArmBias: 14,
-    frontLegBias: 10,
-    backLegBias: -4,
-    torsoTiltBias: 4,
-    headTiltBias: 2,
-    bounceScale: 0.8,
-    shadowScale: 1.08,
-    trailWidth: 12
-  },
-  dhalsim: {
-    shoulder: 23,
-    hips: 16,
-    armScale: 1.28,
-    legScale: 1.28,
-    torsoScaleX: 0.82,
-    torsoScaleY: 1.02,
-    headScale: 0.96,
-    headOffset: -2,
-    nameY: -198,
-    previewScaleX: 0.95,
-    previewScaleY: 0.98,
-    previewYOffset: 2,
-    auraBase: 0.09,
-    swayScale: 0.55,
-    walkScale: 0.7,
-    frontArmBias: -26,
-    backArmBias: 4,
-    frontLegBias: 18,
-    backLegBias: -6,
-    torsoTiltBias: -3,
-    headTiltBias: 0,
-    bounceScale: 0.2,
-    shadowScale: 0.88,
-    trailWidth: 7
-  },
-  sagat: {
-    shoulder: 34,
-    hips: 20,
-    armScale: 1.1,
-    legScale: 1.06,
-    torsoScaleX: 1.16,
-    torsoScaleY: 1.1,
-    headScale: 1.08,
-    headOffset: -2,
-    nameY: -204,
-    previewScaleX: 1.1,
-    previewScaleY: 1.08,
-    previewYOffset: -2,
-    auraBase: 0.14,
-    swayScale: 0.5,
-    walkScale: 0.78,
-    frontArmBias: -2,
-    backArmBias: 20,
-    frontLegBias: 2,
-    backLegBias: 8,
-    torsoTiltBias: 2,
-    headTiltBias: 1,
-    bounceScale: 0.25,
-    shadowScale: 1.12,
-    trailWidth: 13
-  },
-  cammy: {
-    shoulder: 24,
-    hips: 18,
-    armScale: 0.96,
-    legScale: 1.02,
-    torsoScaleX: 0.88,
-    torsoScaleY: 0.95,
-    headScale: 0.94,
-    headOffset: 2,
-    nameY: -192,
-    previewScaleX: 0.92,
-    previewScaleY: 0.94,
-    previewYOffset: 4,
+    previewScaleX: 1,
+    previewScaleY: 1.01,
+    previewYOffset: 0,
     auraBase: 0.12,
-    swayScale: 1.35,
-    walkScale: 1.25,
-    frontArmBias: -20,
-    backArmBias: 10,
-    frontLegBias: 12,
-    backLegBias: -10,
-    torsoTiltBias: -8,
-    headTiltBias: -3,
-    bounceScale: 1.45,
-    shadowScale: 0.92,
-    trailWidth: 9
-  },
-  rose: {
-    shoulder: 26,
-    hips: 18,
-    armScale: 1,
-    legScale: 1.02,
-    torsoScaleX: 0.95,
-    torsoScaleY: 1,
-    headScale: 0.98,
-    headOffset: 1,
-    nameY: -194,
-    previewScaleX: 0.97,
-    previewScaleY: 1,
-    previewYOffset: 1,
-    auraBase: 0.14,
-    swayScale: 0.95,
-    walkScale: 0.98,
-    frontArmBias: -12,
+    swayScale: 0.96,
+    walkScale: 1.02,
+    frontArmBias: -8,
     backArmBias: 12,
-    frontLegBias: 6,
-    backLegBias: -4,
-    torsoTiltBias: -2,
+    frontLegBias: 4,
+    backLegBias: -2,
+    torsoTiltBias: -3,
     headTiltBias: -1,
     bounceScale: 0.78,
-    shadowScale: 0.97,
+    shadowScale: 1,
     trailWidth: 10
   },
-  juri: {
-    shoulder: 23,
+  iori: {
+    shoulder: 29,
+    hips: 18,
+    armScale: 1.03,
+    legScale: 1.02,
+    torsoScaleX: 0.98,
+    torsoScaleY: 1.02,
+    headScale: 1.01,
+    headOffset: 0,
+    nameY: -197,
+    previewScaleX: 1,
+    previewScaleY: 1,
+    previewYOffset: 1,
+    auraBase: 0.16,
+    swayScale: 1.08,
+    walkScale: 1.12,
+    frontArmBias: -12,
+    backArmBias: 14,
+    frontLegBias: 6,
+    backLegBias: -4,
+    torsoTiltBias: -6,
+    headTiltBias: -2,
+    bounceScale: 0.96,
+    shadowScale: 0.98,
+    trailWidth: 11
+  },
+  terry: {
+    shoulder: 31,
+    hips: 19,
+    armScale: 1.04,
+    legScale: 1.02,
+    torsoScaleX: 1.04,
+    torsoScaleY: 1.04,
+    headScale: 1.02,
+    headOffset: 0,
+    nameY: -198,
+    previewScaleX: 1.03,
+    previewScaleY: 1.02,
+    previewYOffset: -1,
+    auraBase: 0.12,
+    swayScale: 0.94,
+    walkScale: 1.02,
+    frontArmBias: -10,
+    backArmBias: 14,
+    frontLegBias: 4,
+    backLegBias: -2,
+    torsoTiltBias: -2,
+    headTiltBias: 0,
+    bounceScale: 0.72,
+    shadowScale: 1.04,
+    trailWidth: 11
+  },
+  mai: {
+    shoulder: 24,
     hips: 18,
     armScale: 0.94,
-    legScale: 1.09,
-    torsoScaleX: 0.9,
-    torsoScaleY: 0.95,
+    legScale: 1.08,
+    torsoScaleX: 0.88,
+    torsoScaleY: 0.94,
     headScale: 0.95,
     headOffset: 2,
     nameY: -192,
-    previewScaleX: 0.92,
+    previewScaleX: 0.93,
     previewScaleY: 0.95,
     previewYOffset: 4,
     auraBase: 0.14,
-    swayScale: 1.3,
-    walkScale: 1.28,
-    frontArmBias: -22,
-    backArmBias: 8,
-    frontLegBias: 16,
+    swayScale: 1.36,
+    walkScale: 1.22,
+    frontArmBias: -18,
+    backArmBias: 10,
+    frontLegBias: 14,
     backLegBias: -10,
-    torsoTiltBias: -9,
-    headTiltBias: -3,
-    bounceScale: 1.5,
-    shadowScale: 0.91,
+    torsoTiltBias: -8,
+    headTiltBias: -2,
+    bounceScale: 1.42,
+    shadowScale: 0.92,
+    trailWidth: 8
+  },
+  leona: {
+    shoulder: 25,
+    hips: 18,
+    armScale: 0.98,
+    legScale: 1.02,
+    torsoScaleX: 0.92,
+    torsoScaleY: 0.98,
+    headScale: 0.96,
+    headOffset: 1,
+    nameY: -194,
+    previewScaleX: 0.95,
+    previewScaleY: 0.98,
+    previewYOffset: 2,
+    auraBase: 0.11,
+    swayScale: 1.02,
+    walkScale: 1.06,
+    frontArmBias: -12,
+    backArmBias: 10,
+    frontLegBias: 8,
+    backLegBias: -4,
+    torsoTiltBias: -4,
+    headTiltBias: -1,
+    bounceScale: 0.9,
+    shadowScale: 0.96,
+    trailWidth: 9
+  },
+  athena: {
+    shoulder: 24,
+    hips: 17,
+    armScale: 0.92,
+    legScale: 1.02,
+    torsoScaleX: 0.9,
+    torsoScaleY: 0.94,
+    headScale: 0.98,
+    headOffset: 2,
+    nameY: -192,
+    previewScaleX: 0.94,
+    previewScaleY: 0.95,
+    previewYOffset: 3,
+    auraBase: 0.15,
+    swayScale: 1.18,
+    walkScale: 1.16,
+    frontArmBias: -16,
+    backArmBias: 8,
+    frontLegBias: 10,
+    backLegBias: -6,
+    torsoTiltBias: -5,
+    headTiltBias: -2,
+    bounceScale: 1.2,
+    shadowScale: 0.93,
     trailWidth: 9
   }
 };
@@ -1600,43 +1604,36 @@ function getPreviewAccessoryMarkup(character) {
         <path d="M -12 -144 Q -36 -158 -54 -138" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round"></path>
         <path d="M -24 -108 L 0 -78 L 24 -108" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
       `;
-    case "blanka":
+    case "kyo":
       return `
-        <path d="M -28 -132 Q 0 -118 28 -132" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
-        <path d="M -34 -26 H 34" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
+        <path d="M -18 -108 L 0 -84 L 18 -108" fill="none" stroke="${palette.secondary}" stroke-width="7" stroke-linecap="round"></path>
+        <path d="M -18 -72 Q 0 -56 18 -72" fill="none" stroke="${palette.secondary}" stroke-width="7" stroke-linecap="round" opacity="0.82"></path>
       `;
-    case "dhalsim":
+    case "iori":
       return `
-        <g fill="${palette.secondary}" opacity="0.92">
-          <circle cx="-20" cy="-114" r="5"></circle>
-          <circle cx="-8" cy="-108" r="5"></circle>
-          <circle cx="8" cy="-108" r="5"></circle>
-          <circle cx="20" cy="-114" r="5"></circle>
-        </g>
-        <path d="M -8 -156 H 8" stroke="${palette.trim}" stroke-width="4" stroke-linecap="round"></path>
+        <path d="M -22 -154 Q -34 -132 -24 -104" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
+        <path d="M 18 -154 Q 8 -130 14 -102" fill="none" stroke="${palette.trim}" stroke-width="6" stroke-linecap="round" opacity="0.86"></path>
       `;
-    case "sagat":
+    case "terry":
       return `
-        <path d="M -6 -154 H 18" stroke="${palette.trim}" stroke-width="8" stroke-linecap="round"></path>
-        <path d="M -18 -118 Q 0 -96 20 -70" fill="none" stroke="${palette.secondary}" stroke-width="6" opacity="0.72"></path>
+        <path d="M -24 -160 Q 0 -178 24 -160 L 18 -144 H -18 Z" fill="${palette.secondary}" opacity="0.92"></path>
+        <path d="M 12 -140 Q 44 -84 46 -28" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
       `;
-    case "cammy":
+    case "mai":
       return `
-        <path d="M -24 -160 Q 0 -182 24 -160 L 18 -142 H -18 Z" fill="${palette.secondary}" opacity="0.9"></path>
-        <path d="M -18 -136 Q -44 -86 -54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
-        <path d="M 18 -136 Q 44 -86 54 -30" fill="none" stroke="${palette.dark}" stroke-width="7" stroke-linecap="round"></path>
+        <circle cx="-20" cy="-148" r="10" fill="${palette.secondary}" opacity="0.92"></circle>
+        <circle cx="20" cy="-148" r="10" fill="${palette.secondary}" opacity="0.92"></circle>
+        <path d="M -26 -74 Q 0 -34 26 -74" fill="${palette.secondary}" opacity="0.72"></path>
       `;
-    case "rose":
+    case "leona":
       return `
-        <ellipse cx="0" cy="-146" rx="30" ry="12" fill="${palette.secondary}" opacity="0.88"></ellipse>
-        <path d="M -34 -122 Q -82 -80 -74 -18 Q -24 -12 8 -44" fill="none" stroke="${palette.secondary}" stroke-width="10" stroke-linecap="round" opacity="0.84"></path>
-        <path d="M 26 -110 Q 70 -64 62 -8" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round" opacity="0.6"></path>
+        <path d="M -18 -156 L -4 -184 L 8 -156" fill="none" stroke="${palette.secondary}" stroke-width="8" stroke-linecap="round"></path>
+        <path d="M -18 -108 H 18" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round" opacity="0.8"></path>
       `;
-    case "juri":
+    case "athena":
       return `
-        <path d="M -24 -162 Q -8 -186 0 -154 Q -18 -146 -24 -162 Z" fill="${palette.secondary}" opacity="0.92"></path>
-        <path d="M 24 -162 Q 8 -186 0 -154 Q 18 -146 24 -162 Z" fill="${palette.secondary}" opacity="0.92"></path>
-        <path d="M -16 -98 L 0 -84 L 16 -98" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round"></path>
+        <ellipse cx="0" cy="-154" rx="26" ry="8" fill="${palette.secondary}" opacity="0.9"></ellipse>
+        <path d="M -24 -98 Q 0 -82 24 -98" fill="none" stroke="${palette.secondary}" stroke-width="6" stroke-linecap="round"></path>
       `;
     default:
       return "";
@@ -1735,116 +1732,100 @@ function decorateFighterParts(fighter, parts) {
         "stroke-linecap": "round"
       });
       break;
-    case "blanka":
-      add(parts.head, "path", {
-        d: "M -28 -132 Q 0 -118 28 -132",
+    case "kyo":
+      add(parts.torso, "path", {
+        d: "M -18 -108 L 0 -84 L 18 -108",
         fill: "none",
         stroke: palette.secondary,
-        "stroke-width": 8,
+        "stroke-width": 7,
         "stroke-linecap": "round"
       });
       add(parts.torso, "path", {
-        d: "M -34 -26 H 34",
+        d: "M -18 -72 Q 0 -56 18 -72",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 7,
+        "stroke-linecap": "round",
+        opacity: 0.82
+      });
+      break;
+    case "iori":
+      add(parts.head, "path", {
+        d: "M -22 -154 Q -34 -132 -24 -104",
         fill: "none",
         stroke: palette.secondary,
         "stroke-width": 8,
         "stroke-linecap": "round"
       });
-      break;
-    case "dhalsim":
-      [-20, -8, 8, 20].forEach((x) => {
-        add(parts.body, "circle", {
-          cx: x,
-          cy: x === -20 || x === 20 ? -114 : -108,
-          r: 5,
-          fill: palette.secondary,
-          opacity: 0.92
-        });
-      });
       add(parts.head, "path", {
-        d: "M -8 -156 H 8",
+        d: "M 18 -154 Q 8 -130 14 -102",
         fill: "none",
         stroke: palette.trim,
-        "stroke-width": 4,
-        "stroke-linecap": "round"
-      });
-      break;
-    case "sagat":
-      add(parts.head, "path", {
-        d: "M -6 -154 H 18",
-        fill: "none",
-        stroke: palette.trim,
-        "stroke-width": 8,
-        "stroke-linecap": "round"
-      });
-      add(parts.torso, "path", {
-        d: "M -18 -118 Q 0 -96 20 -70",
-        fill: "none",
-        stroke: palette.secondary,
         "stroke-width": 6,
-        opacity: 0.72
+        "stroke-linecap": "round",
+        opacity: 0.86
       });
       break;
-    case "cammy":
+    case "terry":
       add(parts.head, "path", {
-        d: "M -24 -160 Q 0 -182 24 -160 L 18 -142 H -18 Z",
+        stroke: palette.secondary,
+        d: "M -24 -160 Q 0 -178 24 -160 L 18 -144 H -18 Z",
+        fill: palette.secondary,
+        opacity: 0.92
+      });
+      add(parts.body, "path", {
+        d: "M 12 -140 Q 44 -84 46 -28",
+        fill: "none",
+        stroke: palette.dark,
+        "stroke-width": 7,
+        "stroke-linecap": "round"
+      });
+      break;
+    case "mai":
+      add(parts.head, "path", {
+        d: "M -20 -148 Q -28 -164 -12 -166 Q -4 -158 -10 -142 Z",
         fill: palette.secondary,
         opacity: 0.9
       });
-      add(parts.body, "path", {
-        d: "M -18 -136 Q -44 -86 -54 -30",
-        fill: "none",
-        stroke: palette.dark,
-        "stroke-width": 7,
-        "stroke-linecap": "round"
+      add(parts.head, "path", {
+        d: "M 20 -148 Q 28 -164 12 -166 Q 4 -158 10 -142 Z",
+        fill: palette.secondary,
+        opacity: 0.9
       });
-      add(parts.body, "path", {
-        d: "M 18 -136 Q 44 -86 54 -30",
-        fill: "none",
-        stroke: palette.dark,
-        "stroke-width": 7,
-        "stroke-linecap": "round"
+      add(parts.torso, "path", {
+        d: "M -26 -74 Q 0 -34 26 -74",
+        fill: palette.secondary,
+        opacity: 0.72
       });
       break;
-    case "rose":
-      add(parts.head, "ellipse", {
-        cx: 0,
-        cy: -146,
-        rx: 30,
-        ry: 12,
-        fill: palette.secondary,
-        opacity: 0.88
-      });
-      add(parts.body, "path", {
-        d: "M -30 -122 Q -84 -84 -72 -18 Q -24 -8 6 -42",
-        fill: "none",
-        stroke: palette.secondary,
-        "stroke-width": 10,
-        "stroke-linecap": "round",
-        opacity: 0.8
-      });
-      add(parts.body, "path", {
-        d: "M 24 -110 Q 68 -66 60 -8",
+    case "leona":
+      add(parts.head, "path", {
+        d: "M -18 -156 L -4 -184 L 8 -156",
         fill: "none",
         stroke: palette.secondary,
         "stroke-width": 8,
-        "stroke-linecap": "round",
-        opacity: 0.56
-      });
-      break;
-    case "juri":
-      add(parts.head, "path", {
-        d: "M -24 -162 Q -8 -186 0 -154 Q -18 -146 -24 -162 Z",
-        fill: palette.secondary,
-        opacity: 0.92
-      });
-      add(parts.head, "path", {
-        d: "M 24 -162 Q 8 -186 0 -154 Q 18 -146 24 -162 Z",
-        fill: palette.secondary,
-        opacity: 0.92
+        "stroke-linecap": "round"
       });
       add(parts.torso, "path", {
-        d: "M -16 -98 L 0 -84 L 16 -98",
+        d: "M -18 -108 H 18",
+        fill: "none",
+        stroke: palette.secondary,
+        "stroke-width": 6,
+        "stroke-linecap": "round",
+        opacity: 0.8
+      });
+      break;
+    case "athena":
+      add(parts.head, "ellipse", {
+        cx: 0,
+        cy: -154,
+        rx: 26,
+        ry: 8,
+        fill: palette.secondary,
+        opacity: 0.9
+      });
+      add(parts.torso, "path", {
+        d: "M -24 -98 Q 0 -82 24 -98",
         fill: "none",
         stroke: palette.secondary,
         "stroke-width": 6,
@@ -2931,56 +2912,32 @@ function getActionRawPose(fighter) {
     pose = { frontArm: -142, backArm: 56, frontLeg: -72, backLeg: 32, torsoTilt: -24, figureY: -8, figureScaleX: 0.9, figureScaleY: 1.12, aura: 0.38, trailOpacity: 0.6, trailReach: 174, trailLift: 120 };
   }
 
-  if (fighter.character.id === "blanka" && move.kind === "aura") {
-    pose = { frontArm: -72, backArm: 86, frontLeg: -26, backLeg: 28, torsoTilt: 12, torsoY: 18, headTilt: 12, figureY: -2, figureScaleX: 1.06, figureScaleY: 0.96, aura: 0.56, trailOpacity: 0.34, trailReach: 144, trailLift: 86 };
+  if (fighter.character.id === "kyo" && move.kind === "projectile") {
+    pose = { frontArm: -120, backArm: 58, frontLeg: -8, backLeg: 12, torsoTilt: -18, figureY: -6, figureScaleX: 0.94, figureScaleY: 1.08, aura: 0.38, trailOpacity: 0.38, trailReach: 158, trailLift: 96 };
   }
 
-  if (fighter.character.id === "dhalsim" && key === "light") {
-    pose = { frontArm: -158, backArm: 24, frontLeg: 8, backLeg: -6, torsoTilt: -14, figureY: -4, figureScaleX: 0.94, figureScaleY: 1.06, aura: 0.22, trailOpacity: 0.18, trailReach: 158, trailLift: 84 };
+  if (fighter.character.id === "iori" && move.kind === "dash") {
+    pose = { frontArm: -92, backArm: 72, frontLeg: -94, backLeg: 20, torsoTilt: -34, headTilt: -8, figureY: -12, figureScaleX: 0.88, figureScaleY: 1.16, aura: 0.44, trailOpacity: 0.72, trailReach: 198, trailLift: 126 };
   }
 
-  if (fighter.character.id === "dhalsim" && key === "heavy") {
-    pose = { frontArm: -38, backArm: 18, frontLeg: -132, backLeg: 22, torsoTilt: -18, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.26, trailOpacity: 0.34, trailReach: 176, trailLift: 112 };
+  if (fighter.character.id === "terry" && move.kind === "dash") {
+    pose = { frontArm: -118, backArm: 52, frontLeg: -82, backLeg: 24, torsoTilt: -28, figureY: -10, figureScaleX: 0.9, figureScaleY: 1.14, aura: 0.4, trailOpacity: 0.66, trailReach: 190, trailLift: 114 };
   }
 
-  if (fighter.character.id === "dhalsim" && move.kind === "aura") {
-    pose = { frontArm: -108, backArm: -20, frontLeg: 18, backLeg: 10, torsoTilt: -24, headTilt: -10, figureY: -4, figureScaleX: 0.96, figureScaleY: 1.04, aura: 0.46, trailOpacity: 0.32, trailReach: 152, trailLift: 88 };
+  if (fighter.character.id === "mai" && move.kind === "projectile") {
+    pose = { frontArm: -108, backArm: 22, frontLeg: -36, backLeg: 42, torsoTilt: -22, headTilt: -8, figureY: -8, figureScaleX: 0.9, figureScaleY: 1.12, aura: 0.4, trailOpacity: 0.48, trailReach: 170, trailLift: 118 };
   }
 
-  if (fighter.character.id === "sagat" && move.kind === "projectile") {
-    pose = { frontArm: -132, backArm: 68, frontLeg: -12, backLeg: 18, torsoTilt: -12, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.38, trailOpacity: 0.38, trailReach: 168, trailLift: 100 };
+  if (fighter.character.id === "mai" && move.kind === "dash") {
+    pose = { frontArm: -74, backArm: 86, frontLeg: -122, backLeg: 30, torsoTilt: -38, headTilt: -10, figureY: -14, figureScaleX: 0.86, figureScaleY: 1.2, aura: 0.48, trailOpacity: 0.8, trailReach: 214, trailLift: 132 };
   }
 
-  if (fighter.character.id === "sagat" && move.kind === "burst") {
-    pose = { frontArm: -6, backArm: 148, frontLeg: -36, backLeg: 84, torsoTilt: -24, figureY: -14, figureScaleX: 0.88, figureScaleY: 1.18, aura: 0.46, trailOpacity: 0.74, trailReach: 194, trailLift: 136 };
+  if (fighter.character.id === "leona" && move.kind === "burst") {
+    pose = { frontArm: -34, backArm: 124, frontLeg: -34, backLeg: 74, torsoTilt: -30, headTilt: -6, figureY: -12, figureScaleX: 0.9, figureScaleY: 1.16, aura: 0.44, trailOpacity: 0.68, trailReach: 182, trailLift: 128 };
   }
 
-  if (fighter.character.id === "cammy" && move.kind === "dash") {
-    pose = { frontArm: -108, backArm: 46, frontLeg: -112, backLeg: 24, torsoTilt: -36, headTilt: -10, figureY: -12, figureScaleX: 0.86, figureScaleY: 1.2, aura: 0.46, trailOpacity: 0.76, trailReach: 208, trailLift: 126 };
-  }
-
-  if (fighter.character.id === "cammy" && move.kind === "burst") {
-    pose = { frontArm: -22, backArm: 138, frontLeg: -30, backLeg: 76, torsoTilt: -28, figureY: -14, figureScaleX: 0.88, figureScaleY: 1.18, aura: 0.48, trailOpacity: 0.78, trailReach: 196, trailLift: 138 };
-  }
-
-  if (fighter.character.id === "rose" && move.kind === "projectile") {
-    pose = { frontArm: -128, backArm: 42, frontLeg: 8, backLeg: -4, torsoTilt: -20, headTilt: -6, figureY: -6, figureScaleX: 0.92, figureScaleY: 1.08, aura: 0.42, trailOpacity: 0.42, trailReach: 172, trailLift: 104 };
-  }
-
-  if (fighter.character.id === "rose" && move.kind === "dash") {
-    pose = { frontArm: -66, backArm: 102, frontLeg: -68, backLeg: 28, torsoTilt: -28, figureY: -10, figureScaleX: 0.9, figureScaleY: 1.14, aura: 0.44, trailOpacity: 0.66, trailReach: 188, trailLift: 116 };
-  }
-
-  if (fighter.character.id === "juri" && key === "heavy") {
-    pose = { frontArm: -34, backArm: 40, frontLeg: -118, backLeg: 46, torsoTilt: -30, headTilt: -8, figureY: -8, figureScaleX: 0.88, figureScaleY: 1.14, aura: 0.36, trailOpacity: 0.5, trailReach: 182, trailLift: 114 };
-  }
-
-  if (fighter.character.id === "juri" && move.kind === "projectile") {
-    pose = { frontArm: -18, backArm: 38, frontLeg: -98, backLeg: 54, torsoTilt: -30, headTilt: -10, figureY: -8, figureScaleX: 0.9, figureScaleY: 1.12, aura: 0.42, trailOpacity: 0.44, trailReach: 174, trailLift: 110 };
-  }
-
-  if (fighter.character.id === "juri" && move.kind === "dash") {
-    pose = { frontArm: -56, backArm: 92, frontLeg: -128, backLeg: 36, torsoTilt: -40, headTilt: -12, figureY: -14, figureScaleX: 0.84, figureScaleY: 1.22, aura: 0.52, trailOpacity: 0.82, trailReach: 212, trailLift: 132 };
+  if (fighter.character.id === "athena" && move.kind === "projectile") {
+    pose = { frontArm: -118, backArm: 34, frontLeg: 2, backLeg: 8, torsoTilt: -18, headTilt: -4, figureY: -6, figureScaleX: 0.94, figureScaleY: 1.08, aura: 0.42, trailOpacity: 0.42, trailReach: 166, trailLift: 104 };
   }
 
   return pose;
